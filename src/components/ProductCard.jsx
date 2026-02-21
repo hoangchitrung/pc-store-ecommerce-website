@@ -13,7 +13,7 @@ export function ProductCardObject(product) {
         <div>
             <h2>Product With Props Object</h2>
             <p>name: {product.name}</p>
-            <p>name: {product.price}</p>
+            <p>price: {product.price}</p>
         </div>
     )
 }
