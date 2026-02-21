@@ -1,19 +1,19 @@
-export function ProductCard({ name, price }) {
+import "./ProductCard.css"
+
+export function ProductCard({ name, brand }) {
     return (
-        <div>
-            <h2>Product with property</h2>
-            <p>Name: {name}</p>
-            <p>Price: {price} $</p>
-        </div>
+        <tr>
+            <td>{name}</td>
+            <td>{brand}</td>
+        </tr>
     )
 }
 
-export function ProductCardObject(product) {
+export function UserCard(user) {
     return (
         <div>
-            <h2>Product With Props Object</h2>
-            <p>name: {product.name}</p>
-            <p>price: {product.price}</p>
+            <p>Id: {user.id}</p>
+            <p>Name: {user.name}</p>
         </div>
     )
 }
