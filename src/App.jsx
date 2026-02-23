@@ -30,16 +30,13 @@ function App() {
     }
     return (
         <BrowserRouter>
-            {/* Display on all pages */}
             <Navbar />
             <Routes>
-                {/* Static route */}
                 <Route path="/" element={<HomePage />}></Route>
                 <Route path="/products" element={<ProductPage />}></Route>
-                <Route path="/cart" element={<CartPage />}></Route>
-                {/* Dynamic route */}
-                <Route path="/products/:id" element={<ProductDetailsPage />}></Route>
+                <Route path="/carts" element={<CartPage />}></Route>
             </Routes>
+
             <div>
                 <h1>Prop section</h1>
                 <ProductCard name={"RTX 3050"} brand={"Asus"}></ProductCard>
