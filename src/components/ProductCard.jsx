@@ -1,19 +1,18 @@
+import { Link } from "react-router-dom"
 import "./ProductCard.css"
 
-export function ProductCard({ name, brand }) {
+export function ProductCard({products}) {
     return (
-        <tr>
-            <td>{name}</td>
-            <td>{brand}</td>
-        </tr>
-    )
-}
-
-export function UserCard(user) {
-    return (
-        <div>
-            <p>Id: {user.id}</p>
-            <p>Name: {user.name}</p>
-        </div>
+        <>
+            <h1>List Products</h1>
+            {products.map((product) => (
+                <div key={product.id}>
+                    <p>Name: {product.name}</p>
+                    <p>Price: {product.price}</p>
+                    <p>Stock: {product.stock}</p>
+                    <Link to={`/products/${product.id}`}>Details</Link>
+                </div>
+            ))}
+        </>
     )
 }
