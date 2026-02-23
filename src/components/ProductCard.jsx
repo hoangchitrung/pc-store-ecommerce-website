@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import "./ProductCard.css"
 
-export function ProductCard({products}) {
+export function ProductCard({ products }) {
     return (
         <>
             <h1>List Products</h1>
@@ -11,6 +11,8 @@ export function ProductCard({products}) {
                     <p>Price: {product.price}</p>
                     <p>Stock: {product.stock}</p>
                     <Link to={`/products/${product.id}`}>Details</Link>
+                    <br />
+                    <button>Add to Cart</button>
                 </div>
             ))}
         </>
