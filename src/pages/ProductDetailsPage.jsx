@@ -11,9 +11,9 @@ export function ProductDetailsPage() {
 
     return (
         <div>
-            <h1>ID: {product.id}</h1>
-            <h1>Name: {product.name}</h1>
-            <p>Desc: {product.desc}</p>
+            <p>Name: {product.name}</p>
+            <p>Price: {product.price}</p>
+            <p>Stock: {product.stock}</p>
         </div>
     )
 }

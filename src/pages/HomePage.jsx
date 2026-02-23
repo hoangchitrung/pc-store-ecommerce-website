@@ -1,15 +1,11 @@
 import { ProductCard } from "../components/ProductCard";
+import { data } from "../data/data.jsx";
 
 export function HomePage() {
-    const products = [
-        { id: 1, name: `MacBook 14"`, price: 1500.00, stock: 50 },
-        { id: 2, name: `MacBook 15"`, price: 1500.00, stock: 50 },
-        { id: 3, name: `MacBook 16"`, price: 1500.00, stock: 50 },
-        { id: 4, name: `MacBook 17"`, price: 1500.00, stock: 50 },
-    ];
+    // const products = data.
     return (
         <div>
-            <ProductCard products={products}/>
+            <ProductCard products={data}/>
         </div>
     )
 }
