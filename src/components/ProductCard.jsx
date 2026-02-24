@@ -9,7 +9,6 @@ export function ProductCard({ products, onAddToCart }) {
                 <div key={product.id}>
                     <p>Name: {product.name}</p>
                     <p>Price: {product.price}</p>
-                    <p>Stock: {product.stock}</p>
                     <Link to={`/products/${product.id}`}>Details</Link>
                     <br />
                     <button onClick={() => onAddToCart(product)}>Add to Cart</button>
