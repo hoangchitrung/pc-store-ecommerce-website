@@ -8,35 +8,24 @@ import { HomePage } from "./pages/HomePage.jsx";
 import { ProductPage } from "./pages/ProductPage.jsx";
 import { Navbar } from "./components/Navbar.jsx";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
-import { data } from "./data/data.jsx";
 import { useState } from "react";
+import { data } from "./data/data.jsx";
 function App() {
-
-    const [cart, setCart] = useState([]);
+    const [ cart, setCart ] = useState([]);
 
     function handleAddToCart(product) {
-
-        const findData = data.find((item) => item.id === product.id)
-
-        if (!findData) {
-            alert("Product isnt exist");
+        if (product.stock === 0) {
+            alert(`Out of stock`);
+            return;
         }
-
-        if (data.stock === 0) {
-            alert("Out of stock");
-        }
-        // set cart number on header
-        setCart([...cart, data]);
-        console.log("clicked");
-
+        product.stock-=1;
+        setCart([...cart, product]);
     }
 
     return (
         <BrowserRouter>
             <Navbar />
-            <div>
-                <p>Cart Number: {cart.length}</p>
-            </div>
+            <p>Cart: {cart.length}</p>
             <Routes>
                 {/* Static route */}
                 <Route path="/" element={<HomePage onAddToCart={handleAddToCart} />}></Route>
