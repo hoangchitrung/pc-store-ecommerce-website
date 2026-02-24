@@ -1,5 +1,22 @@
-export function CartPage() {
+
+
+export function CartPage({ onCart }) {
+
     return (
-        <h1>This is cart page</h1>
+        <div>
+            <h1>Your Cart</h1>
+            <h1>Total: {onCart.reduce((total, item) => { return total + item.price }, 0)}$</h1>
+            {onCart.map(product => {
+                if (product.id)
+                    return (
+                        <div key={product.id} >
+                            <p>Name: {product.name}</p>
+                            <p>Price: {product.price}</p>
+                            <p>Stock: {product.stock}</p>
+
+                        </div>
+                    )
+            })}
+        </div >
     )
 }
