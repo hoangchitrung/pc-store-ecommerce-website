@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../components/ProductCard.jsx";
-import { getProduct, getProductById } from "../api/productApi.js";
+import { getProduct } from "../api/productApi.js";
 export function ProductPage() {
     const [products, setProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
