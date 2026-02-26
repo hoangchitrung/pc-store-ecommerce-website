@@ -1,13 +1,19 @@
+import { useState } from "react";
+import { getProduct } from "../api/productApi";
 import { ProductCard } from "../components/ProductCard";
-import { data } from "../data/data.jsx";
+import { useEffect } from "react";
 
-export function HomePage({ onAddToCart }) {
-    // const products = data.
+export function HomePage() {
+    const [products, setProducts] = useState([])
+
+    useEffect(() => {
+        getProduct().then((data) => setProducts(data), [])
+    })
+
     return (
         <div>
             <ProductCard
-                products={data}
-                onAddToCart={onAddToCart}
+                products={products}
             />
         </div>
     )

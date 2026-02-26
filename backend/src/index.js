@@ -1,9 +1,11 @@
 const express = require("express")
+const cors = require("cors")
 
 const app = express()
 const PORT = 3000
 
 app.use(express.json())
+app.use(cors())
 
 let products = [
     { id: 1, name: "RTX 3050", price: 750, stock: 15 },

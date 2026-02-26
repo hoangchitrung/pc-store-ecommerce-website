@@ -1,4 +1,4 @@
-const BASE_URL = "https://699d839683e60a406a4691e5.mockapi.io"
+const BASE_URL = "http://localhost:3000"
 
 export function getProduct() {
     return fetch(`${BASE_URL}/products`).then((res) => res.json());

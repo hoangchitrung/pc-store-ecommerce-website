@@ -9,28 +9,17 @@ import { ProductPage } from "./pages/ProductPage.jsx";
 import { Navbar } from "./components/Navbar.jsx";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
 import { useState } from "react";
+import { useEffect } from "react";
 
 function App() {
-    const [cart, setCart] = useState([]);
-
-    function handleAddToCart(product) {
-        if (product.stock === 0) {
-            alert(`Out of stock`);
-            return;
-        }
-        product.stock -= 1;
-        setCart([...cart, product]);
-    }
-
     return (
         <BrowserRouter>
             <Navbar />
-            <p>Cart: {cart.length}</p>
             <Routes>
                 {/* Static route */}
-                <Route path="/" element={<HomePage onAddToCart={handleAddToCart} />}></Route>
+                <Route path="/" element={<HomePage />}></Route>
                 <Route path="/products" element={<ProductPage />}></Route>
-                <Route path="/carts" element={<CartPage onCart={cart} />}></Route>
+                <Route path="/carts" element={<CartPage />}></Route>
 
                 {/* Dynamic route */}
                 <Route path="products/:id" element={<ProductDetailsPage />}></Route>

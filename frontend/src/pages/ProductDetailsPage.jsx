@@ -1,9 +1,15 @@
 import { useParams } from "react-router-dom"
-import { data } from "../data/data.jsx";
+import { getProductById } from "../api/productApi.js";
+import { useState, useEffect } from "react";
 
 export function ProductDetailsPage() {
     const { id } = useParams();
-    const product = data.find((item) => item.id === parseInt(id));
+
+    const [product, setProduct] = useState([])
+
+    useEffect(() => {
+        getProductById(id).then((data) => setProduct(data), [])
+    })
 
     if (!product) {
         return <h1>Product not found!</h1>
