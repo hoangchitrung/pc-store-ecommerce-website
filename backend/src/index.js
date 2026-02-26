@@ -1,5 +1,6 @@
 const express = require("express")
 const cors = require("cors")
+const connection = require("./db")
 
 const app = express()
 const PORT = 3000
@@ -7,27 +8,36 @@ const PORT = 3000
 app.use(express.json())
 app.use(cors())
 
-let products = [
-    { id: 1, name: "RTX 3050", price: 750, stock: 15 },
-    { id: 2, name: "Intel i7", price: 350, stock: 10 },
-    { id: 3, name: "RAM 32GB", price: 120, stock: 20 },
-]
-
 // GET all products
 app.get("/products", (req, res) => {
-    res.json(products)
-})
+    const sql = "SELECT * FROM products;"
+    connection.query(sql, (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: `Database Error: ${err}` });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "There are no product on the list" });
+        }
+        res.json(results)
+    });
+});
 
 app.get("/products/:id", (req, res) => {
-    const { id } = req.params
-    const product = products.find((p) => p.id === parseInt(id))
+    const { id } = req.params;
+    const sql = `SELECT * FROM products
+                WHERE id = ?;
+    `;
+    connection.query(sql, [id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: `Database Error: ${err}` });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: `Product not found` });
+        }
 
-    if (!product) {
-        return res.status(404).json({ message: "Product not found" })
-    }
-
-    res.json(product)
-})
+        res.json(results[0]);
+    });
+});
 
 app.put("/products/:id", (req, res) => {
     const { id } = req.params

@@ -19,7 +19,7 @@ export function ProductDetailsPage() {
         <div>
             <p>Name: {product.name}</p>
             <p>Price: {product.price}</p>
-            <p>Stock: {product.stock}</p>
+            <p>Stock: {product.stock_quantity}</p>
         </div>
     )
 }
