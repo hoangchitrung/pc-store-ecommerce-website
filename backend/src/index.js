@@ -5,7 +5,7 @@ const PORT = 3000
 
 app.use(express.json())
 
-const products = [
+let products = [
     { id: 1, name: "RTX 3050", price: 750, stock: 15 },
     { id: 2, name: "Intel i7", price: 350, stock: 10 },
     { id: 3, name: "RAM 32GB", price: 120, stock: 20 },
@@ -25,6 +25,35 @@ app.get("/products/:id", (req, res) => {
     }
 
     res.json(product)
+})
+
+app.put("/products/:id", (req, res) => {
+    const { id } = req.params
+    const product = products.find((p) => p.id === parseInt(id))
+
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" })
+    }
+
+    if (req.body.name !== undefined) product.name = req.body.name
+    if (req.body.price !== undefined) product.name = req.body.name
+    if (req.body.stock !== undefined) product.name = req.body.name
+
+    res.json(products)
+})
+
+app.delete("/products/:id", (req, res) => {
+    const { id } = req.params
+    const product = products.find((p) => p.id === parseInt(id))
+
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" })
+    }
+
+    // assign array after filter
+    products = products.filter((p) => p.id !== parseInt(id))
+
+    res.json(products)
 })
 
 app.listen(PORT, () => {
