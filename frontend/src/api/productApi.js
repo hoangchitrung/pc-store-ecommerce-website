@@ -7,3 +7,13 @@ export function getProduct() {
 export function getProductById(id) {
     return fetch(`${BASE_URL}/products/${id}`).then((res) => res.json());
 }
+
+export function addProduct(product) {
+    return fetch(`${BASE_URL}/products`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(product)
+    }).then(res => res.json());
+}
