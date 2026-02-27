@@ -1,0 +1,16 @@
+/* App.css hoặc AdminPage.css */
+.admin-form .form-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.admin-form label {
+    min-width: 120px;
+}
+
+.specifications-group input {
+    display: block;
+    margin-bottom: 8px;
+}
