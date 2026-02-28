@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const connection = require("./db");
+const connection = require("./config/db");
 
 const app = express();
 const PORT = 3000;
