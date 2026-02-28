@@ -20,6 +20,7 @@ function App() {
                 <Route path="/" element={<HomePage />}></Route>
                 <Route path="/products" element={<ProductPage />}></Route>
                 <Route path="/carts" element={<CartPage />}></Route>
+                
                 {/* Admin */}
                 <Route path="/admin" element={<AdminPage />}></Route>
 
