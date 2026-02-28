@@ -1,4 +1,4 @@
-# Project Dir
+# Project Structure
 
 pc-store-ecommerce/
 ├── client/              # Toàn bộ code React (Vite)
