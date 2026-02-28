@@ -8,7 +8,7 @@ import { HomePage } from "./pages/HomePage.jsx";
 import { ProductPage } from "./pages/ProductPage.jsx";
 import { Navbar } from "./components/Navbar.jsx";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
-import { AdminPage } from "./components/AdminPage.jsx";
+import { AdminPage } from "./pages/AdminPage.jsx";
 
 function App() {
     return (

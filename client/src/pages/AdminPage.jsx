@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import "./App.css"
-import { addProduct } from "../api/productApi";
+import "./Admin.css"
+import { addProduct } from "../hooks/productApi";
 
 export function AdminPage() {
 
