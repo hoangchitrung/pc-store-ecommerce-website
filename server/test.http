@@ -1,22 +1,26 @@
-
-# delete product
-DELETE http://localhost:3000/products/1
-
-# update product
-PUT http://localhost:3000/products/2
+# USERS
+# get all user
+GET http://localhost:3000/api/users
+GET http://localhost:3000/api/users/6
+POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-    "name": "RTX 4090",
-    "price": 2500,
-    "stock": 5
+    "fullName": "Hoang Chi Trung",
+    "email": "trunghoang1127@gmail.com",
+    "password": "123456",
+    "address": "hoi lam gi"
 }
 
-GET http://localhost:3000/products
+# PRODUCTS
+# get product
+GET http://localhost:3000/api/products
 
-GET http://localhost:3000/products/2
+# get product by id
+GET http://localhost:3000/api/products/2
 
-POST http://localhost:3000/products
+# add product
+POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
@@ -31,4 +35,17 @@ Content-Type: application/json
   "specifications": "{\"cores\": 24, \"threads\": 32, \"socket\": \"LGA1700\", \"base_clock\": \"3.5GHz\", \"boost_clock\": \"5.8GHz\"}",
   "serial_number_required": false,
   "is_active": true
+}
+
+# delete product
+DELETE http://localhost:3000/api/products/1
+
+# update product
+PUT http://localhost:3000/api/products/2
+Content-Type: application/json
+
+{
+    "name": "RTX 4090",
+    "price": 2500,
+    "stock": 5
 }

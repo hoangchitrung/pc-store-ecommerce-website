@@ -30,7 +30,7 @@ exports.getProductById = (req, res) => {
             return res.status(404).json({ message: `Product not found` });
         }
 
-        res.json(results[0]);
+        return res.json(results[0]);
     });
 };
 
@@ -69,9 +69,7 @@ exports.addProduct = (req, res) => {
             if (err) {
                 return res.status(500).json({ message: `Database Error: ${err}` });
             }
-            res
-                .status(201)
-                .json({ message: "Product created", id: results.insertId });
+            return res.status(201).json({ message: "Product created", id: results.insertId });
         },
     );
 };
@@ -89,7 +87,7 @@ exports.updateProductById = (req, res) => {
     if (req.body.price !== undefined) product.name = req.body.name;
     if (req.body.stock !== undefined) product.name = req.body.name;
 
-    res.json(products);
+    return res.json(products);
 };
 
 exports.deleteProductById = (req, res) => {
@@ -103,5 +101,5 @@ exports.deleteProductById = (req, res) => {
     // assign array after filter
     products = products.filter((p) => p.id !== parseInt(id));
 
-    res.json(products);
+    return res.json(products);
 }

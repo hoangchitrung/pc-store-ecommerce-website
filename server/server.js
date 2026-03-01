@@ -9,7 +9,11 @@ app.use(cors());
 
 // PRODUCT ROUTES
 const productRoutes = require("./routes/productRoutes");
-app.use("/products", productRoutes)
+app.use("/api/products", productRoutes);
+
+// USER ROUTES
+const userRoutes = require("./routes/userRoutes");
+app.use("/api/users", userRoutes);
 
 // SERVER
 app.listen(PORT, () => {
