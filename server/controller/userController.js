@@ -33,7 +33,7 @@ exports.addUser = async (req, res) => {
     const { fullName, email, password, address } = req.body;
 
     if (!fullName || !email || !password) {
-        return res.status(404).json({ message: "fullname, email, password are required" });
+        return res.status(400).json({ message: "fullname, email, password are required" });
     }
 
     try {
