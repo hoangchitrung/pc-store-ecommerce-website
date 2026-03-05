@@ -14,13 +14,13 @@ Content-Type: application/json
 
 # PRODUCTS
 # get product
-GET http://localhost:3000/api/products
+GET http://localhost:5000/api/products
 
 # get product by id
-GET http://localhost:3000/api/products/2
+GET http://localhost:5000/api/products/2
 
 # add product
-POST http://localhost:3000/api/products
+POST http://localhost:5000/api/products
 Content-Type: application/json
 
 {
@@ -38,10 +38,10 @@ Content-Type: application/json
 }
 
 # delete product
-DELETE http://localhost:3000/api/products/1
+DELETE http://localhost:5000/api/products/1
 
 # update product
-PUT http://localhost:3000/api/products/2
+PUT http://localhost:5000/api/products/2
 Content-Type: application/json
 
 {

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000"
+const BASE_URL = "http://localhost:5000/api"; // Đổi port 3000 -> 5000 và thêm /api
 
 export function getProduct() {
     return fetch(`${BASE_URL}/products`).then((res) => res.json());

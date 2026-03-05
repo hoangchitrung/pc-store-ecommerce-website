@@ -1,51 +1,40 @@
 import "./App.css";
+import { useState } from "react";
+import { useLocation, Outlet } from "react-router-dom"; // Thay Routes bằng Outlet
 
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
-import { ProductCard } from "./components/ProductCard.jsx";
-import { CartPage } from "./pages/CartPage.jsx";
-import { HomePage } from "./pages/HomePage.jsx";
-import { ProductPage } from "./pages/ProductPage.jsx";
 import { Navbar } from "./components/Navbar.jsx";
-import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
-import { AdminPage } from "./pages/AdminPage.jsx";
-import { SignUpPage } from "./pages/SignUpPage.jsx";
-import { SignInPage } from "./pages/SignInPage.jsx";
 
-function AppContent() {
-    const { pathname } = useLocation();
+export default function App() { // Export default để import ở main.jsx
+  const { pathname } = useLocation();
+  
+  // State lưu trữ giỏ hàng (global state)
+  const [cart, setCart] = useState([]);
 
-    const hideNavbar = pathname === "/signup" || pathname === "/signin";
-    return (
-        <>
-            {!hideNavbar && <Navbar />}
-            <Routes>
-                {/* Static route */}
-                {/* User, Admin */}
-                <Route path="/" element={<HomePage />}></Route>
-                <Route path="/products" element={<ProductPage />}></Route>
-                <Route path="/carts" element={<CartPage />}></Route>
+  // Hàm thêm sản phẩm vào giỏ
+  const onAdd = (product) => {
+    const exist = cart.find((x) => x.id === product.id);
+    if (exist) {
+      setCart(
+        cart.map((x) =>
+          x.id === product.id ? { ...exist, quantity: exist.quantity + 1 } : x
+        )
+      );
+    } else {
+      setCart([...cart, { ...product, quantity: 1 }]);
+    }
+    // Thông báo cho người dùng
+    alert(`Đã thêm ${product.name} vào giỏ hàng!`);
+  };
 
-                {/* Auth routes */}
-                <Route path="/signup" element={<SignUpPage />}></Route>
-                <Route path="/signin" element={<SignInPage />}></Route>
-
-                {/* Admin */}
-                <Route path="/admin" element={<AdminPage />}></Route>
-
-                {/* Dynamic route */}
-                <Route path="products/:id" element={<ProductDetailsPage />}></Route>
-            </Routes>
-        </>
-    );
+  const hideNavbar = pathname === "/signup" || pathname === "/signin";
+  
+  return (
+    <>
+      {/* Truyền số lượng vào Navbar để hiển thị icon giỏ hàng */}
+      {!hideNavbar && <Navbar cartCount={cart.length} />} 
+      
+      {/* Render các route con qua Outlet, truyền props nếu cần */}
+      <Outlet context={{ onAdd, cart, setCart }} /> // Truyền context để các page con dùng (useOutletContext)
+    </>
+  );
 }
-
-function App() {
-    return (
-        <BrowserRouter>
-            <AppContent />
-        </BrowserRouter>
-    );
-}
-
-export default App;
