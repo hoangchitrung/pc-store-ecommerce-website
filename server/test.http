@@ -1,25 +1,38 @@
+@baseUrl = http://localhost:3000
+@token = 
+
 # USERS
-# get all user
-GET http://localhost:3000/api/users
-GET http://localhost:3000/api/users/6
-POST http://localhost:3000/api/users
+### get all user
+GET {{baseUrl}}/api/v1/users
+### get user by id
+GET {{baseUrl}}/api/v1/users/5
+### register
+POST {{baseUrl}}/api/v1/users
 Content-Type: application/json
 
 {
     "fullName": "Hoang Chi Trung",
-    "email": "trunghoang1127@gmail.com",
-    "password": "123456",
-    "address": "hoi lam gi"
+    "email": "trunghoang1128@gmail.com",
+    "password": "123456"
+}
+
+### login
+POST {{baseUrl}}/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "trunghoang1128@gmail.com",
+    "password": "123456"
 }
 
 # PRODUCTS
-# get product
+### get product
 GET http://localhost:3000/api/products
 
-# get product by id
+### get product by id
 GET http://localhost:3000/api/products/2
 
-# add product
+### add product
 POST http://localhost:3000/api/products
 Content-Type: application/json
 
@@ -37,10 +50,10 @@ Content-Type: application/json
   "is_active": true
 }
 
-# delete product
+### delete product
 DELETE http://localhost:3000/api/products/1
 
-# update product
+### update product
 PUT http://localhost:3000/api/products/2
 Content-Type: application/json
 

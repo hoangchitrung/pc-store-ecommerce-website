@@ -13,7 +13,7 @@ app.use("/api/products", productRoutes);
 
 // USER ROUTES
 const userRoutes = require("./routes/userRoutes");
-app.use("/api/users", userRoutes);
+app.use("/api/v1/users", userRoutes);
 
 // SERVER
 app.listen(PORT, () => {
