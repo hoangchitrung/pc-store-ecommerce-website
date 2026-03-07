@@ -29,7 +29,7 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-// register user and add user
+// add user
 exports.addUser = async (req, res) => {
     try {
         const { fullName, email, password } = req.body;
@@ -45,33 +45,3 @@ exports.addUser = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
-
-exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(404).json({ message: "Email and Password are required for login" });
-        }
-
-        const user = await userService.getUserByEmail(email);
-        if (!user) {
-            res.status(401).json({ message: "Invalid credentials" });
-        }
-
-        const ok = await bcrypt.compare(password, user.password);
-        if (!ok) {
-            return res.status(404).json({ message: "Invalid credentials" });
-        }
-
-        const token = jwt.sign(
-            { sub: user.id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
-        );
-
-        return res.json({ message: "Login successful", token });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
-}

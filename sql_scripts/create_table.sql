@@ -8,7 +8,7 @@ CREATE TABLE users (
     fullname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    address TEXT NOT NULL,
+    address TEXT,
     phone VARCHAR(20),
     role ENUM('customer', 'staff', 'admin') DEFAULT 'customer',
     is_active BOOLEAN DEFAULT TRUE,

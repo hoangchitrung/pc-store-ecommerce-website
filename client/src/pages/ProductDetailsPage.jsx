@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom"
-import { getProductById } from "../hooks/productApi";
 import { useState, useEffect } from "react";
 
 export function ProductDetailsPage() {

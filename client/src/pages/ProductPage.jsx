@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../components/ProductCard.jsx";
-import { getProduct } from "../hooks/productApi.js";
 export function ProductPage() {
     const [products, setProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
