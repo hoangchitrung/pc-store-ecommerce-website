@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "./SignUpPage.css";
 
 export function SignUpPage() {
     const navigate = useNavigate();
@@ -51,7 +52,7 @@ export function SignUpPage() {
 
     return (
         <form className="sign-up-form" onSubmit={onSubmit}>
-            <h1>Sign In</h1>
+            <h1>Sign Up</h1>
             <div className="input-field">
                 <label htmlFor="fullname">Full Name:</label>
                 <input id="fullName" name="fullName" type="text" value={form.fullName} onChange={onChange} required />
@@ -69,7 +70,10 @@ export function SignUpPage() {
 
             {error && <p style={{ color: "crimson" }}>{error}</p>}
             {success && <p style={{ color: "green" }}>{success}</p>}
-            <button className="sign-in-button" type="submit" disabled={loading}>{loading ? "Signing up..." : "Sign Up"}</button>
+            <button className="sign-up-button" type="submit" disabled={loading}>{loading ? "Signing up..." : "Sign Up"}</button>
+            <p className="sign-in-hint">
+                Already have an account? <Link to="/signin">Sign In</Link>
+            </p>
         </form>
     );
 }

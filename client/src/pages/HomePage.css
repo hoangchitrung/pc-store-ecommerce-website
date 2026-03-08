@@ -1,0 +1,31 @@
+.home-page {
+    padding: 24px;
+}
+
+.home-page h1 {
+    margin: 0 0 8px;
+}
+
+.home-subtitle {
+    margin: 0 0 20px;
+    color: #64748b;
+}
+
+.category-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.category-section {
+    border-radius: 14px;
+    padding: 16px;
+    background: #f8fafc;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.category-title {
+    margin: 0 0 12px;
+    color: #1e293b;
+    font-size: 1.25rem;
+}
