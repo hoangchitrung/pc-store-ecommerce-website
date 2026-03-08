@@ -4,14 +4,18 @@ import { useNavigate } from "react-router-dom";
 
 export function SignUpPage() {
     const navigate = useNavigate();
+    // receive information from the input field
     const [form, setForm] = useState({
         fullName: "",
         email: "",
         password: "",
     });
 
+    // connection state
     const [loading, setLoading] = useState(false);
+    // display errors
     const [error, setError] = useState("");
+    // display success notifications
     const [success, setSuccess] = useState("");
 
     const onChange = (e) => {

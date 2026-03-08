@@ -1,10 +1,18 @@
 const jwt = require("jsonwebtoken");
 
 function authMiddleware(req, res, next) {
-    const authHeader = req.headers.authorization || "";
-    const [type, token] = authHeader.split(" ");
+    let token = req.cookies?.accessToken;
 
-    if (type !== "Bearer" || !token) {
+    if (!token) {
+        const authHeader = req.headers.authorization || "";
+        const [type, bearerToken] = authHeader.split(" ");
+
+        if (type === "Bearer" && bearerToken) {
+            token = bearerToken;
+        }
+    }
+
+    if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
 

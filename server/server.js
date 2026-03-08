@@ -1,11 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173", // local vite server
+    credentials: true
+}));
+app.use(cookieParser());
 
 // PRODUCT ROUTES
 const productRoutes = require("./routes/productRoutes");

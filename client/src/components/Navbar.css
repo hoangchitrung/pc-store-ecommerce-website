@@ -1,0 +1,24 @@
+.navbar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 24px;
+}
+
+.nav-links,
+.navbar-rightm .search-form {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.search-form input {
+    width: 320px;
+    max-width: 100%;
+}
+
+/* helper class reuse */
+.is-hidden {
+    display: none !important;
+}
