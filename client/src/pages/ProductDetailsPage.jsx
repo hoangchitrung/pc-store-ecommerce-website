@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 export function ProductDetailsPage() {
     const { id } = useParams();
-    const { onAdd } = useOutletContext();   // ← lấy onAdd từ App
+    const { onAdd } = useOutletContext();  
 
-    const [product, setProduct] = useState(null);   // ← sửa: null thay vì []
+    const [product, setProduct] = useState(null);   
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ export function ProductDetailsPage() {
                 console.error(err);
                 setIsLoading(false);
             });
-    }, [id]);   // ← quan trọng: thêm dependency [id]
+    }, [id]);   
 
     if (isLoading) return <p>Đang tải sản phẩm...</p>;
     if (!product) return <h1>Product not found!</h1>;
@@ -35,6 +35,7 @@ export function ProductDetailsPage() {
             />
             <p><strong>Giá:</strong> {product.price?.toLocaleString('vi-VN')} VND</p>
             <p><strong>Tồn kho:</strong> {product.stock_quantity}</p>
+            <p><strong>Thương hiệu:</strong> {product.brand}</p>
             <p>{product.description}</p>
 
             {/* Nút Add to Cart */}

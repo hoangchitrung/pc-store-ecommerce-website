@@ -1,13 +1,12 @@
 import "./App.css";
 import { useState } from "react";
-import { useLocation, Outlet } from "react-router-dom"; // Thay Routes bằng Outlet
+import { useLocation, Outlet } from "react-router-dom"; 
 
 import { Navbar } from "./components/Navbar.jsx";
 
-export default function App() { // Export default để import ở main.jsx
+export default function App() { 
   const { pathname } = useLocation();
   
-  // State lưu trữ giỏ hàng (global state)
   const [cart, setCart] = useState([]);
 
   // Hàm thêm sản phẩm vào giỏ
@@ -22,7 +21,6 @@ export default function App() { // Export default để import ở main.jsx
     } else {
       setCart([...cart, { ...product, quantity: 1 }]);
     }
-    // Thông báo cho người dùng
     alert(`Đã thêm ${product.name} vào giỏ hàng!`);
   };
 
@@ -34,7 +32,7 @@ export default function App() { // Export default để import ở main.jsx
       {!hideNavbar && <Navbar cartCount={cart.length} />} 
       
       {/* Render các route con qua Outlet, truyền props nếu cần */}
-      <Outlet context={{ onAdd, cart, setCart }} /> // Truyền context để các page con dùng (useOutletContext)
+      <Outlet context={{ onAdd, cart, setCart }} /> 
     </>
   );
 }
