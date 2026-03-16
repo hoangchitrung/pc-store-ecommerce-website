@@ -1,3 +1,4 @@
+```text
 # Project Structure
 
 pc-store-ecommerce/
@@ -13,3 +14,4 @@ pc-store-ecommerce/
 │   ├── controllers/     # Logic xử lý dữ liệu (Query SQL ở đây)
 │   └── server.js        # File chạy chính
 └── sql_scripts/         # Lưu lại các file .sql
+```
