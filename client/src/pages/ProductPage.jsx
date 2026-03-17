@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../components/ProductCard.jsx";
-
-// Thêm prop onAdd
-export function ProductPage({ onAdd }) {
+export function ProductPage() {
     const [products, setProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);

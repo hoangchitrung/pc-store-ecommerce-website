@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import "./Admin.css"
-import { addProduct } from "../api/productApi";
 
 export function AdminPage() {
 

@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useState } from "react";
+
 function CartItemImage({ src, alt }) {
     const [hasError, setHasError] = useState(false);
     const showFallback = !src || hasError;
@@ -24,8 +26,7 @@ function CartItemImage({ src, alt }) {
     );
 }
 
-// Nhận cart thay vì onCart
-export function CartPage({ cart = [], setCart }) {
+export function CartPage({ onCart = [] }) {
 
     return (
         <div>
