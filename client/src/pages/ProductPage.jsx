@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";   // ← thêm dòng này
 import { ProductCard } from "../components/ProductCard.jsx";
-import { getProduct } from "../hooks/productApi.js";
+import { getProduct } from "../api/productApi.js";
 
 export function ProductPage() {
     const { onAdd } = useOutletContext();   // ← lấy onAdd từ App

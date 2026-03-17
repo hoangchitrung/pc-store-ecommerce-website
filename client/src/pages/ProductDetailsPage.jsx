@@ -1,5 +1,5 @@
 import { useParams, useOutletContext } from "react-router-dom"; // ← thêm useOutletContext
-import { getProductById } from "../hooks/productApi";
+import { getProductById } from "../api/productApi";
 import { useState, useEffect } from "react";
 
 export function ProductDetailsPage() {

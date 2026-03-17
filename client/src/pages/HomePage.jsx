@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getProduct } from "../hooks/productApi";
+import { getProduct } from "../api/productApi";
 import { ProductCard } from "../components/ProductCard";
 import { useEffect } from "react";
 

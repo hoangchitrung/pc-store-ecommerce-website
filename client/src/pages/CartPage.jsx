@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { getProductById } from '../hooks/productApi';
+import { getProductById } from '../api/productApi';
 
 export function CartPage() {
   const { cart: cartFromContext, setCart } = useOutletContext(); 
