@@ -1,11 +1,13 @@
 import axios from "axios";
 
+// 1. Dùng Axios instance với Port 5000 theo đúng backend của bạn
 const productApi = axios.create({
-    baseURL: "http://localhost:3000/api/products",
+    baseURL: "http://localhost:5000/api/products", // Đã cập nhật port 5000
     headers: { "Content-Type": "application/json" },
 });
 
-export async function getProducts() {
+// 2. Giữ tên hàm getProduct() để file ProductPage.jsx của bạn không bị lỗi
+export async function getProduct() {
     try {
         const response = await productApi.get("/");
         return response.data;
@@ -14,6 +16,7 @@ export async function getProducts() {
     }
 }
 
+// 3. Hàm lấy chi tiết sản phẩm theo ID
 export async function getProductById(id) {
     try {
         const response = await productApi.get(`/${id}`);
@@ -23,7 +26,8 @@ export async function getProductById(id) {
     }
 }
 
-export async function createProduct(payload) {
+// 4. Giữ tên hàm addProduct() theo ý bạn (tương đương createProduct)
+export async function addProduct(payload) {
     try {
         const response = await productApi.post("/", payload);
         return response.data;
@@ -32,6 +36,7 @@ export async function createProduct(payload) {
     }
 }
 
+// 5. Giữ lại hàm update của bạn bè cho trang Admin
 export async function updateProduct(id, payload) {
     try {
         const response = await productApi.put(`/${id}`, payload);
@@ -41,6 +46,7 @@ export async function updateProduct(id, payload) {
     }
 }
 
+// 6. Giữ lại hàm delete của bạn bè cho trang Admin
 export async function deleteProduct(id) {
     try {
         const response = await productApi.delete(`/${id}`);

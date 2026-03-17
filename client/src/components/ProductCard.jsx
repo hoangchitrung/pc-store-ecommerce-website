@@ -1,67 +1,38 @@
-import { useNavigate } from "react-router-dom"
-import { useState } from "react";
-import "./ProductCard.css"
+import { Link } from "react-router-dom";
 
-function ProductImage({ src, alt }) {
-    const [hasError, setHasError] = useState(false);
-    const showFallback = !src || hasError;
-
+export function ProductCard({ products, onAdd }) {
     return (
-        <div className="product-image-wrap" aria-label={showFallback ? "Image unavailable" : alt}>
-            {showFallback ? (
-                <div className="product-image-fallback">
-                    <i className="fa-solid fa-image"></i>
-                </div>
-            ) : (
-                <img
-                    className="product-image"
-                    src={src}
-                    alt={alt}
-                    loading="lazy"
-                    onError={() => setHasError(true)}
-                />
-            )}
-        </div>
-    );
-}
-
-export function ProductCard({ products, onAddToCart }) {
-    const navigate = useNavigate();
-
-    return (
-        <div className="product-grid">
+        <div className="row g-4">
             {products.map((product) => (
-                <article
-                    className="product-card"
-                    key={product.id}
-                    onClick={() => navigate(`/products/${product.id}`)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            navigate(`/products/${product.id}`);
-                        }
-                    }}
-                >
-                    <ProductImage src={product.image_url} alt={product.name} />
-                    <p className="product-name">{product.name}</p>
-                    <p className="product-price">${Number(product.price).toLocaleString()}</p>
-                    <div className="product-actions">
-                        {typeof onAddToCart === "function" && (
-                            <button
-                                className="cart-btn"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onAddToCart(product);
+                <div key={product.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div className="card h-100 shadow-sm border-0 bg-white">
+                        <Link to={`/products/${product.id}`} className="text-decoration-none text-dark text-center pt-3">
+                            <img 
+                                src={product.image_url} 
+                                className="card-img-top p-2" 
+                                alt={product.name}
+                                style={{ height: "180px", objectFit: "contain" }}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://via.placeholder.com/180?text=No+Image";
                                 }}
+                            />
+                            <div className="card-body">
+                                <h6 className="card-title text-truncate mb-2" title={product.name}>{product.name}</h6>
+                                <p className="card-text fw-bold text-danger fs-5">{product.price}$</p>
+                            </div>
+                        </Link>
+                        <div className="card-footer bg-transparent border-top-0 pb-3 pt-0">
+                            <button 
+                                className="btn btn-outline-primary w-100 fw-semibold" 
+                                onClick={() => onAdd(product)}
                             >
-                                Add to Cart
+                                Thêm vào giỏ
                             </button>
-                        )}
+                        </div>
                     </div>
-                </article>
+                </div>
             ))}
         </div>
-    )
+    );
 }

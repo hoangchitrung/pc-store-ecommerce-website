@@ -1,64 +1,17 @@
-import { useState } from "react";
-import { ProductCard } from "../components/ProductCard";
-import { useEffect } from "react";
-import { getProducts } from "../api/productApi";
-import "./HomePage.css";
+import { Link } from "react-router-dom";
 
 export function HomePage() {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
-    useEffect(() => {
-        const loadProducts = async () => {
-            setLoading(true);
-            setError("");
-
-            try {
-                const data = await getProducts();
-                setProducts(data);
-            } catch (err) {
-                setError(err.message || "Cannot load products");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadProducts();
-    }, []);
-
-    const productsByCategory = products.reduce((groups, product) => {
-        const category = product.category || "Other";
-        if (!groups[category]) {
-            groups[category] = [];
-        }
-        groups[category].push(product);
-        return groups;
-    }, {});
-
-    const orderedCategories = Object.keys(productsByCategory).sort((a, b) =>
-        a.localeCompare(b),
-    );
-
     return (
-        <div className="home-page">
-            <h1>Welcome to TechForge</h1>
-            <p className="home-subtitle">Browse products by category.</p>
-
-            {loading && <p>Loading products...</p>}
-            {error && <p style={{ color: "crimson" }}>Error: {error}</p>}
-            {!loading && !error && products.length === 0 && <p>No products yet.</p>}
-
-            {!loading && !error && orderedCategories.length > 0 && (
-                <div className="category-sections">
-                    {orderedCategories.map((category) => (
-                        <section className="category-section" key={category}>
-                            <h2 className="category-title">{category}</h2>
-                            <ProductCard products={productsByCategory[category]} />
-                        </section>
-                    ))}
-                </div>
-            )}
+        <div className="container mt-5">
+            <div className="p-5 text-center bg-white rounded-4 shadow-sm border">
+                <h1 className="display-4 fw-bold mb-3 text-dark">Chào mừng đến với PC STORE</h1>
+                <p className="lead text-muted mb-4">
+                    Nơi cung cấp các linh kiện và máy tính chất lượng nhất với giá cả phải chăng.
+                </p>
+                <Link to="/products" className="btn btn-primary btn-lg px-5 rounded-pill shadow">
+                    Khám phá sản phẩm ngay
+                </Link>
+            </div>
         </div>
-    )
+    );
 }

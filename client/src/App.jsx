@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react"; // Đã thêm useState
+import { useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import { CartPage } from "./pages/CartPage.jsx";
@@ -14,7 +14,7 @@ import { SignInPage } from "./pages/SignInPage.jsx";
 function AppContent() {
     const { pathname } = useLocation();
 
-    // 1. Khai báo state và hàm onAdd ở đây
+    // Logic Giỏ hàng
     const [cart, setCart] = useState([]);
 
     const onAdd = (product) => {
@@ -31,38 +31,33 @@ function AppContent() {
         alert(`Đã thêm ${product.name} vào giỏ hàng!`);
     };
 
+    // Ẩn thanh Navbar ở các trang đăng nhập/đăng ký
     const hideNavbar = pathname === "/signup" || pathname === "/signin";
     
+    // Tính tổng số lượng item để hiển thị lên icon giỏ hàng
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
     return (
-        <>
-            {/* 2. Truyền cartCount cho Navbar */}
-            {!hideNavbar && <Navbar cartCount={cart.length} />}
+        <div className="bg-light min-vh-100"> {/* Thêm background sáng cho toàn app */}
+            {!hideNavbar && <Navbar cartCount={totalItems} />}
+            
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                
-                {/* 3. Truyền onAdd xuống trang Sản phẩm */}
                 <Route path="/products" element={<ProductPage onAdd={onAdd} />} />
-                
-                {/* 4. Truyền cart và setCart xuống trang Giỏ hàng */}
-                <Route path="/carts" element={<CartPage cart={cart} setCart={setCart} />} />
-
+                <Route path="/carts" element={<CartPage cart={cart} />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signin" element={<SignInPage />} />
                 <Route path="/admin" element={<AdminPage />} />
-
-                {/* 5. Truyền onAdd xuống trang Chi tiết */}
-                <Route path="products/:id" element={<ProductDetailsPage onAdd={onAdd} />} />
+                <Route path="/products/:id" element={<ProductDetailsPage onAdd={onAdd} />} />
             </Routes>
-        </>
+        </div>
     );
 }
 
-function App() {
+export default function App() {
     return (
         <BrowserRouter>
             <AppContent />
         </BrowserRouter>
     );
 }
-
-export default App;
