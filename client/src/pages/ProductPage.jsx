@@ -1,35 +1,32 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";   // ← thêm dòng này
 import { ProductCard } from "../components/ProductCard.jsx";
-import { getProduct } from "../api/productApi.js";
 
-export function ProductPage() {
-    const { onAdd } = useOutletContext();   // ← lấy onAdd từ App
-
+// Thêm prop onAdd
+export function ProductPage({ onAdd }) {
     const [products, setProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        setIsLoading(true);
+        setIsLoading(true)
 
         getProduct()
             .then((data) => {
-                setProduct(data);
-                setIsLoading(false);
+                setProduct(data)
+                setIsLoading(false)
+            }).catch((err) => {
+                setError(err.message)
+                setIsLoading(false)
             })
-            .catch((err) => {
-                setError(err.message);
-                setIsLoading(false);
-            });
-    }, []);
+    }, [])
 
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (isLoading) return <p>Loading...</p>
+    if (error) return <p>Error: {error}</p>
 
     return (
         <div>
-            <ProductCard products={products} onAdd={onAdd} />   {/* ← truyền onAdd xuống */}
+            {/* Truyền tiếp onAdd xuống ProductCard để làm nút "Thêm vào giỏ" */}
+            <ProductCard products={products} onAdd={onAdd} />
         </div>
-    );
+    )
 }

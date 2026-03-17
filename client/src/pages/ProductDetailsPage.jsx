@@ -1,59 +1,30 @@
-import { useParams, useOutletContext } from "react-router-dom"; // ← thêm useOutletContext
-import { getProductById } from "../api/productApi";
+import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react";
 
-export function ProductDetailsPage() {
+// Nhận prop onAdd
+export function ProductDetailsPage({ onAdd }) {
     const { id } = useParams();
-    const { onAdd } = useOutletContext();  
 
-    const [product, setProduct] = useState(null);   
-    const [isLoading, setIsLoading] = useState(true);
+    // Sửa giá trị khởi tạo từ [] thành null vì data trả về là 1 object
+    const [product, setProduct] = useState(null) 
 
     useEffect(() => {
-        setIsLoading(true);
-        getProductById(id)
-            .then((data) => {
-                setProduct(data);
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                console.error(err);
-                setIsLoading(false);
-            });
-    }, [id]);   
+        // Đã sửa lại vị trí của array dependencies [id]
+        getProductById(id).then((data) => setProduct(data))
+    }, [id])
 
-    if (isLoading) return <p>Đang tải sản phẩm...</p>;
-    if (!product) return <h1>Product not found!</h1>;
+    if (!product) {
+        return <h1>Loading or Product not found!</h1>
+    }
 
     return (
-        <div style={{ padding: "40px", maxWidth: "800px", margin: "0 auto" }}>
-            <h1>{product.name}</h1>
-            <img 
-                src={product.image_url || "https://via.placeholder.com/400"} 
-                alt={product.name} 
-                style={{ width: "100%", maxHeight: "400px", objectFit: "cover" }}
-            />
-            <p><strong>Giá:</strong> {product.price?.toLocaleString('vi-VN')} VND</p>
-            <p><strong>Tồn kho:</strong> {product.stock_quantity}</p>
-            <p><strong>Thương hiệu:</strong> {product.brand}</p>
-            <p>{product.description}</p>
-
-            {/* Nút Add to Cart */}
-            <button
-                onClick={() => onAdd(product)}
-                style={{
-                    marginTop: "20px",
-                    padding: "15px 30px",
-                    fontSize: "18px",
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "8px",
-                    cursor: "pointer"
-                }}
-            >
-                Thêm vào giỏ hàng
-            </button>
+        <div>
+            <p>Name: {product.name}</p>
+            <p>Price: {product.price}</p>
+            <p>Stock: {product.stock_quantity}</p>
+            
+            {/* Thêm nút để gọi hàm onAdd */}
+            <button onClick={() => onAdd(product)}>Thêm vào giỏ hàng</button>
         </div>
-    );
+    )
 }
