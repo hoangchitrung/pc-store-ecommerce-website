@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 const PORT = 5000;
@@ -11,6 +12,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(cookieParser());
+app.use("/api/payment", paymentRoutes);
 
 // PRODUCT ROUTES
 const productRoutes = require("./routes/productRoutes");
