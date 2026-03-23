@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ProductCard } from "../components/ProductCard.jsx";
+
 export function ProductPage() {
     const [products, setProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(false);

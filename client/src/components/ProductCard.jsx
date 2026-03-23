@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react";
-import "./ProductCard.css"
 
 function ProductImage({ src, alt }) {
     const [hasError, setHasError] = useState(false);

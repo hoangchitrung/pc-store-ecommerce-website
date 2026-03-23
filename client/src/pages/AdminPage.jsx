@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import "./Admin.css"
-
 export function AdminPage() {
 
     // init value for product
