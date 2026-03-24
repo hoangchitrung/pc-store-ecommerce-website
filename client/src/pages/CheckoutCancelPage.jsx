@@ -1,31 +1,37 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import axios from "axios";
 
 export function CheckoutCancelPage() {
+    // Lấy mã đơn hàng từ trên thanh URL (do PayOS gắn vào)
     const [searchParams] = useSearchParams();
     const orderCode = searchParams.get("orderCode");
 
+    useEffect(() => {
+        if (orderCode) {
+            axios.put(`http://localhost:5000/api/payment/cancel/${orderCode}`)
+                .then(res => console.log("✅ Đã báo Backend hủy đơn thành công!"))
+                .catch(err => console.error("❌ Lỗi khi báo hủy đơn:", err));
+        }
+    }, [orderCode]);
+
     return (
-        <div className="container mt-5 mb-5 text-center">
-            <div className="card shadow-sm border-0 py-5 mx-auto" style={{ maxWidth: "600px" }}>
-                <div className="card-body">
-                    {/* Icon dấu X thất bại */}
-                    <i className="fa-solid fa-circle-xmark text-danger mb-3" style={{ fontSize: "80px" }}></i>
-                    
-                    <h2 className="fw-bold mt-2">Đã hủy thanh toán</h2>
-                    <p className="text-muted fs-5 mt-3">Đơn hàng của bạn chưa được thanh toán và vẫn còn trong giỏ.</p>
-                    
-                    {orderCode && <p className="text-secondary">Mã đơn hàng bị hủy: #{orderCode}</p>}
-                    
-                    <div className="mt-4 pt-2">
-                        <Link to="/carts" className="btn btn-danger px-4 py-2 me-3 rounded-pill shadow-sm fw-semibold">
-                            Quay lại Giỏ hàng
-                        </Link>
-                        <Link to="/" className="btn btn-outline-secondary px-4 py-2 rounded-pill shadow-sm fw-semibold">
-                            Về trang chủ
-                        </Link>
-                    </div>
-                </div>
+        <div className="container text-center mt-5 mb-5 p-5 bg-white shadow-sm rounded">
+            <div className="text-danger mb-4">
+                <i className="fa-solid fa-circle-xmark" style={{ fontSize: "5rem" }}></i>
             </div>
+            <h2 className="fw-bold text-danger mb-3">Thanh toán thất bại hoặc đã bị hủy!</h2>
+            {orderCode && (
+                <p className="fs-5 text-muted mb-4">
+                    Đơn hàng <strong className="text-dark">#{orderCode}</strong> của bạn chưa được thanh toán và đã chuyển sang trạng thái Hủy.
+                </p>
+            )}
+            <Link to="/carts" className="btn btn-outline-danger px-4 py-2 me-3 fw-bold">
+                <i className="fa-solid fa-cart-shopping me-2"></i> Quay lại giỏ hàng
+            </Link>
+            <Link to="/" className="btn btn-primary px-4 py-2 fw-bold">
+                Về trang chủ
+            </Link>
         </div>
     );
 }

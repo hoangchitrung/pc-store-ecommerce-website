@@ -7,7 +7,6 @@ export function CheckoutSuccessPage({ setCart }) {
     const orderCode = searchParams.get("orderCode");
 
     useEffect(() => {
-        // Khi người dùng đáp xuống trang này thành công -> Xóa sạch giỏ hàng
         setCart([]);
     }, [setCart]);
 

@@ -1,4 +1,3 @@
-import "./App.css";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
@@ -7,12 +6,12 @@ import { HomePage } from "./pages/HomePage.jsx";
 import { ProductPage } from "./pages/ProductPage.jsx";
 import { Navbar } from "./components/Navbar.jsx";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
-import { AdminPage } from "./pages/AdminPage.jsx";
 import { SignUpPage } from "./pages/SignUpPage.jsx";
 import { SignInPage } from "./pages/SignInPage.jsx";
 import { CheckoutPage } from "./pages/CheckoutPage.jsx";
 import { CheckoutSuccessPage } from "./pages/CheckoutSuccessPage.jsx";
 import { CheckoutCancelPage } from "./pages/CheckoutCancelPage.jsx";
+import { AdminPage } from "./pages/AdminPage.jsx";
 
 function AppContent() {
     const { pathname } = useLocation();
