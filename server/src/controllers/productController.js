@@ -2,8 +2,16 @@ const connection = require("../config/db");
 
 // get all products
 exports.getAllProduct = (req, res) => {
-    const sql = "SELECT * FROM products;";
-    connection.query(sql, (err, results) => {
+    const { category } = req.query;
+    let sql = "SELECT * FROM products";
+    let params = [];
+
+    if (category) {
+        sql += " WHERE category = ?";
+        params.push(category);
+    }
+
+    connection.query(sql, params, (err, results) => {
         if (err) {
             return res.status(500).json({ message: `Database Error: ${err}` });
         }

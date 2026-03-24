@@ -1,48 +1,139 @@
+import { Link } from "react-router-dom";
 
-import { useState } from "react";
+export function CartPage({ cart, setCart }) {
+    
+    // 1. Hàm tăng số lượng (+)
+    const handleIncrease = (product) => {
+        setCart(cart.map((item) => 
+            item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        ));
+    };
 
-function CartItemImage({ src, alt }) {
-    const [hasError, setHasError] = useState(false);
-    const showFallback = !src || hasError;
+    // 2. Hàm giảm số lượng (-)
+    const handleDecrease = (product) => {
+        setCart(cart.map((item) => 
+            // Chỉ giảm khi số lượng đang lớn hơn 1 (Không cho giảm xuống 0)
+            item.id === product.id && item.quantity > 1 
+                ? { ...item, quantity: item.quantity - 1 } 
+                : item
+        ));
+    };
 
-    if (showFallback) {
+    // 3. Hàm xóa hẳn sản phẩm khỏi giỏ (Thùng rác)
+    const handleRemove = (product) => {
+        if (window.confirm(`Bạn có chắc chắn muốn xóa ${product.name} khỏi giỏ hàng?`)) {
+            // Lọc và giữ lại những item có id KHÁC với id của sản phẩm vừa bấm xóa
+            setCart(cart.filter((item) => item.id !== product.id));
+        }
+    };
+
+    // Tính tổng tiền của toàn bộ giỏ hàng
+    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    // Giao diện khi giỏ hàng trống
+    if (cart.length === 0) {
         return (
-            <div style={{ width: 72, height: 72, borderRadius: 10, background: "#f1f5f9", display: "grid", placeItems: "center", color: "#64748b" }}>
-                <i className="fa-solid fa-image"></i>
+            <div className="container mt-5 mb-5 text-center py-5 bg-white shadow-sm rounded">
+                <i className="fa-solid fa-cart-arrow-down text-muted mb-3" style={{ fontSize: "4rem" }}></i>
+                <h3 className="mb-4 fw-bold">Giỏ hàng của bạn đang trống</h3>
+                <p className="text-muted mb-4">Có vẻ như bạn chưa thêm sản phẩm nào vào giỏ.</p>
+                <Link to="/products" className="btn btn-primary px-4 py-2 fw-bold">
+                    Tiếp tục mua sắm
+                </Link>
             </div>
         );
     }
 
+    // Giao diện chính của Giỏ hàng
     return (
-        <img
-            src={src}
-            alt={alt}
-            width={72}
-            height={72}
-            style={{ borderRadius: 10, objectFit: "cover" }}
-            onError={() => setHasError(true)}
-        />
-    );
-}
-
-export function CartPage({ onCart = [] }) {
-
-    return (
-        <div>
-            <h1>Your Cart</h1>
-            <h1>Total: {onCart.reduce((total, item) => { return total + item.price }, 0)}$</h1>
-            {onCart.map(product => {
-                if (product.id)
-                    return (
-                        <div key={product.id} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                            <CartItemImage src={product.image_url} alt={product.name} />
-                            <p>Name: {product.name}</p>
-                            <p>Price: {product.price}</p>
-                            <p>Stock: {product.stock}</p>
-
+        <div className="container mt-5 mb-5">
+            <h2 className="fw-bold mb-4">Giỏ hàng của bạn</h2>
+            <div className="row g-4">
+                
+                {/* Cột trái: Danh sách sản phẩm */}
+                <div className="col-lg-8">
+                    <div className="card shadow-sm border-0">
+                        <div className="card-body p-0 table-responsive">
+                            <table className="table table-hover align-middle mb-0">
+                                <thead className="table-light">
+                                    <tr>
+                                        <th scope="col" className="ps-4">Sản phẩm</th>
+                                        <th scope="col" className="text-center">Đơn giá</th>
+                                        <th scope="col" className="text-center">Số lượng</th>
+                                        <th scope="col" className="text-center">Thành tiền</th>
+                                        <th scope="col" className="text-center">Xóa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {cart.map((item) => (
+                                        <tr key={item.id}>
+                                            <td className="ps-4 py-3">
+                                                <div className="d-flex align-items-center">
+                                                    <img 
+                                                        src={item.image_url} 
+                                                        alt={item.name} 
+                                                        style={{ width: "60px", height: "60px", objectFit: "contain" }} 
+                                                        className="me-3 rounded bg-light border"
+                                                        onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/60?text=No+Image"; }}
+                                                    />
+                                                    <span className="fw-semibold text-truncate" style={{ maxWidth: "250px" }} title={item.name}>
+                                                        {item.name}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="text-center text-muted fw-semibold">{item.price}$</td>
+                                            <td className="text-center">
+                                                <div className="d-flex justify-content-center align-items-center">
+                                                    <button 
+                                                        className="btn btn-sm btn-outline-secondary px-2" 
+                                                        onClick={() => handleDecrease(item)} 
+                                                        disabled={item.quantity <= 1} // Mờ nút trừ nếu số lượng là 1
+                                                    >
+                                                        <i className="fa-solid fa-minus"></i>
+                                                    </button>
+                                                    <span className="mx-3 fw-bold fs-5">{item.quantity}</span>
+                                                    <button 
+                                                        className="btn btn-sm btn-outline-secondary px-2" 
+                                                        onClick={() => handleIncrease(item)}
+                                                    >
+                                                        <i className="fa-solid fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className="text-center fw-bold text-danger">{item.price * item.quantity}$</td>
+                                            <td className="text-center">
+                                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleRemove(item)}>
+                                                    <i className="fa-solid fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
-                    )
-            })}
-        </div >
-    )
+                    </div>
+                </div>
+
+                {/* Cột phải: Khung thanh toán */}
+                <div className="col-lg-4">
+                    <div className="card shadow-sm border-0 bg-white">
+                        <div className="card-body p-4">
+                            <h4 className="fw-bold mb-4 border-bottom pb-3">Tổng cộng</h4>
+                            <div className="d-flex justify-content-between mb-3 fs-5">
+                                <span className="text-muted">Tạm tính:</span>
+                                <span className="fw-bold">{totalPrice}$</span>
+                            </div>
+                            <div className="d-flex justify-content-between mb-4 fs-4">
+                                <span className="fw-bold">Thành tiền:</span>
+                                <span className="fw-bold text-danger">{totalPrice}$</span>
+                            </div>
+                            <Link to="/checkout" className="btn btn-primary btn-lg w-100 fw-bold py-3 shadow-sm">
+                                TIẾN HÀNH THANH TOÁN
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }

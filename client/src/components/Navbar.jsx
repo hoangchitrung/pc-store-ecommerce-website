@@ -48,13 +48,6 @@ function AuthButtons() {
             </div>
         );
     }
-
-    return (
-        <div className="d-flex gap-2 align-items-center">
-            <Link to="/signup" className="btn btn-primary fw-bold px-2 rounded shadow-sm text-white text-center">Sign Up</Link>
-            <Link to="/signin" className="btn btn-outline-primary fw-bold px-2 rounded text-center ms-n2">Sign In</Link>
-        </div>
-    );
 }
 
 export function Navbar() {
