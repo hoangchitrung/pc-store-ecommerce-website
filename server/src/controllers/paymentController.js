@@ -75,6 +75,8 @@ const createPaymentLink = async (req, res) => {
 
 const handleWebhook = async (req, res) => {
     try {
+        console.log("CALLED");
+        
         const webhookData = payos.verifyPaymentWebhookData ? payos.verifyPaymentWebhookData(req.body) : await payos.webhooks.verify(req.body);
         const orderCode = webhookData.orderCode || webhookData.data?.orderCode;
         

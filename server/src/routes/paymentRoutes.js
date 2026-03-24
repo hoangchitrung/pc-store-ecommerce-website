@@ -4,7 +4,7 @@ const { createPaymentLink, handleWebhook, cancelPayment } = require("../controll
 
 router.post("/create-link", createPaymentLink);
 // For webhook signature verification we need the raw request body. Use express.raw only for this route.
-router.post("/webhook", express.raw({ type: '*/*' }), handleWebhook);
+router.post("/webhook", handleWebhook);
 router.put("/cancel/:orderCode", cancelPayment); 
 
 module.exports = router;
