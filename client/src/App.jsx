@@ -10,6 +10,9 @@ import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
 import { AdminPage } from "./pages/AdminPage.jsx";
 import { SignUpPage } from "./pages/SignUpPage.jsx";
 import { SignInPage } from "./pages/SignInPage.jsx";
+import { CheckoutPage } from "./pages/CheckoutPage.jsx";
+import { CheckoutSuccessPage } from "./pages/CheckoutSuccessPage.jsx";
+import { CheckoutCancelPage } from "./pages/CheckoutCancelPage.jsx";
 
 function AppContent() {
     const { pathname } = useLocation();
@@ -45,6 +48,9 @@ function AppContent() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/products" element={<ProductPage onAdd={onAdd} />} />
                 <Route path="/carts" element={<CartPage cart={cart} />} />
+                <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
+                <Route path="/checkout-success" element={<CheckoutSuccessPage setCart={setCart} />} />
+                <Route path="/checkout-cancel" element={<CheckoutCancelPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signin" element={<SignInPage />} />
                 <Route path="/admin" element={<AdminPage />} />

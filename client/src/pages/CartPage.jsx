@@ -1,6 +1,14 @@
+import { useNavigate } from "react-router-dom";
+
 export function CartPage({ cart = [] }) {
-    // Tính tổng tiền
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const navigate = useNavigate();
+
+    const handleCheckout = () => {
+        if (cart.length === 0) return;
+        // Chuyển hướng sang trang Checkout để gọi PayOS
+        navigate("/checkout");
+    };
 
     return (
         <div className="container mt-4 mb-5">
@@ -57,7 +65,7 @@ export function CartPage({ cart = [] }) {
                                     <span className="fw-bold fs-5">Tổng cộng</span>
                                     <span className="fw-bold fs-3 text-danger">{total}$</span>
                                 </div>
-                                <button className="btn btn-danger w-100 py-2 fs-5 fw-bold shadow">
+                                <button onClick={handleCheckout} className="btn btn-danger w-100 py-2 fs-5 fw-bold shadow">
                                     Tiến hành thanh toán
                                 </button>
                             </div>
