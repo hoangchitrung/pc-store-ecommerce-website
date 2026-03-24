@@ -1,4 +1,61 @@
 import logo from "../assets/logo.png";
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
+function AuthButtons() {
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const readUser = () => {
+            const raw = localStorage.getItem('user');
+            if (raw) {
+                try {
+                    setUser(JSON.parse(raw));
+                } catch (e) {
+                    setUser(null);
+                }
+            } else {
+                setUser(null);
+            }
+        };
+
+        // initial read
+        readUser();
+
+        // listen for custom authChange events so components can react immediately
+        window.addEventListener('authChange', readUser);
+        return () => window.removeEventListener('authChange', readUser);
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        setUser(null);
+        // notify other components
+        window.dispatchEvent(new Event('authChange'));
+        navigate('/');
+    };
+
+    if (user) {
+        return (
+            <div className="d-flex gap-2 align-items-center">
+                <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none text-dark">
+                    <i className="fa-solid fa-user fa-lg"></i>
+                    <span className="fw-semibold">{user.name}</span>
+                </Link>
+                <button onClick={handleLogout} className="btn btn-outline-secondary btn-sm">Logout</button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="d-flex gap-2 align-items-center">
+            <Link to="/signup" className="btn btn-primary fw-bold px-2 rounded shadow-sm text-white text-center">Sign Up</Link>
+            <Link to="/signin" className="btn btn-outline-primary fw-bold px-2 rounded text-center ms-n2">Sign In</Link>
+        </div>
+    );
+}
 
 export function Navbar() {
     return (
@@ -28,10 +85,7 @@ export function Navbar() {
                     </a>
                 </div>
 
-                <div className="d-flex gap-2">
-                    <button className="btn btn-primary fw-bold px-4 rounded-pill shadow-sm">Sign Up</button>
-                    <button className="btn btn-outline-primary fw-bold px-4 rounded-pill">Sign In</button>
-                </div>
+                <AuthButtons />
             </div>
 
             <div className="border border-top-0 w-100 shadow-sm">

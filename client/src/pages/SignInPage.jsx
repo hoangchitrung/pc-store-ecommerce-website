@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api/authApi";
+import { loginUser, getMe } from "../api/authApi";
 
 
 export function SignInPage() {
@@ -37,7 +37,27 @@ export function SignInPage() {
                 password: form.password
             };
 
-            await loginUser(payload);
+            const data = await loginUser(payload);
+
+            // If backend returned user/token directly, persist them
+            if (data) {
+                if (data.token) localStorage.setItem('token', data.token);
+                if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
+            }
+
+            // If backend didn't return user info, try fetching /me
+            if (!localStorage.getItem('user')) {
+                try {
+                    const me = await getMe();
+                    if (me) localStorage.setItem('user', JSON.stringify(me));
+                } catch (e) {
+                    // ignore — UI will fallback
+                }
+            }
+
+            // notify other components (Navbar) that auth state changed
+            window.dispatchEvent(new Event('authChange'));
+
             setSuccess("Login success");
             setForm({ email: "", password: "" });
 
