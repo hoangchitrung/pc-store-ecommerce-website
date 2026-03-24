@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getProducts } from "../api/productApi";
 import Footer from "../components/Footer.jsx";
+import { ChatBubble } from "../components/ChatBubble.jsx";
 
 export function HomePage() {
     // Use a full-height flex column so Footer stays at the bottom when content is short
@@ -20,6 +21,7 @@ export function HomePage() {
             </main>
 
             <Footer />
+            <ChatBubble />
         </div>
     );
 }

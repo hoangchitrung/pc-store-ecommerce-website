@@ -27,4 +27,8 @@ app.use("/api/auth", authRoutes);
 const paymentRoutes = require("./routes/paymentRoutes");
 app.use("/api/payment", paymentRoutes);
 
+// CHAT ROUTES (AI assistant with Ollama)
+const chatRoutes = require("./routes/chatRoutes");
+app.use("/api/chat", chatRoutes);
+
 module.exports = app;
