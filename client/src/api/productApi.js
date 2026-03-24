@@ -1,13 +1,13 @@
 import axios from "axios";
 
-// 1. Dùng Axios instance với Port 5000 theo đúng backend của bạn
+// 1. Dùng Axios instance với Port 5000 theo đúng backend
 const productApi = axios.create({
     baseURL: "http://localhost:5000/api/products", // Đã cập nhật port 5000
     headers: { "Content-Type": "application/json" },
 });
 
-// 2. Giữ tên hàm getProduct() để file ProductPage.jsx của bạn không bị lỗi
-export async function getProduct() {
+// 2. Đổi tên hàm thành getProducts để đúng với import ở HomePage.jsx
+export async function getProducts() {
     try {
         const response = await productApi.get("/");
         return response.data;

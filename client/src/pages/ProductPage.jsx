@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../components/ProductCard.jsx";
-import { getProduct } from "../api/productApi.js"; 
+import { getProducts } from "../api/productApi.js"; 
 
 export function ProductPage({ onAdd }) {
     const [products, setProduct] = useState([]);
@@ -9,7 +9,7 @@ export function ProductPage({ onAdd }) {
 
     useEffect(() => {
         setIsLoading(true);
-        getProduct()
+        getProducts()
             .then((data) => {
                 setProduct(data);
                 setIsLoading(false);
