@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import { CartPage } from "./pages/CartPage.jsx";
@@ -16,8 +16,18 @@ import { AdminPage } from "./pages/AdminPage.jsx";
 function AppContent() {
     const { pathname } = useLocation();
 
-    // Logic Giỏ hàng
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState(() => {
+        const savedCart = localStorage.getItem("myCart");
+        if (savedCart) {
+            return JSON.parse(savedCart);
+        } else {
+            return [];
+        }
+    });
+
+    useEffect(() => {
+        localStorage.setItem("myCart", JSON.stringify(cart));
+    }, [cart]);
 
     const onAdd = (product) => {
         const exist = cart.find((x) => x.id === product.id);
@@ -40,13 +50,13 @@ function AppContent() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
-        <div className="bg-light min-vh-100"> {/* Thêm background sáng cho toàn app */}
+        <div className="bg-light min-vh-100">
             {!hideNavbar && <Navbar cartCount={totalItems} />}
             
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/products" element={<ProductPage onAdd={onAdd} />} />
-                <Route path="/carts" element={<CartPage cart={cart} />} />
+                <Route path="/carts" element={<CartPage cart={cart} setCart={setCart} />} />
                 <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
                 <Route path="/checkout-success" element={<CheckoutSuccessPage setCart={setCart} />} />
                 <Route path="/checkout-cancel" element={<CheckoutCancelPage />} />
