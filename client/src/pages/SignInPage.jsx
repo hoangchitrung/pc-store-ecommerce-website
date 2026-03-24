@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser, getMe } from "../api/authApi";
 
 
@@ -70,21 +70,34 @@ export function SignInPage() {
     }
 
     return (
-        <form className="sign-in-form" onSubmit={onSubmit}>
-            <h1>Sign In</h1>
-            <div className="input-form">
-                <label htmlFor="email">Email:</label>
-                <input id="email" name="email" type="email" value={form.email} onChange={onChange} required />
-            </div>
-            <div className="input-form">
-                <label htmlFor="password">Password:</label>
-                <input id="password" name="password" type="password" value={form.password} onChange={onChange} required />
-            </div>
+        <div className="container d-flex align-items-center justify-content-center min-vh-100 bg-light">
+            <div className="card shadow-lg p-4" style={{ maxWidth: 400, width: '100%' }}>
+                <form onSubmit={onSubmit} autoComplete="off">
+                    <h2 className="mb-4 text-center fw-bold">Sign In</h2>
 
-            {error && <p style={{ color: "crimson" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>{success}</p>}
+                    <div className="mb-3">
+                        <label htmlFor="email" className="form-label">Email</label>
+                        <input id="email" name="email" type="email" className="form-control form-control-lg" value={form.email} onChange={onChange} required autoFocus />
+                    </div>
 
-            <button className="sign-in-button" type="submit" disabled={loading}>{loading ? "Signing In..." : "Sign In"}</button>
-        </form>
+                    <div className="mb-3">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <input id="password" name="password" type="password" className="form-control form-control-lg" value={form.password} onChange={onChange} required />
+                    </div>
+
+                    {error && <div className="alert alert-danger py-2 small mb-2">{error}</div>}
+                    {success && <div className="alert alert-success py-2 small mb-2">{success}</div>}
+
+                    <button className="btn btn-primary w-100 py-2 fw-bold rounded-pill shadow-sm mb-2" type="submit" disabled={loading} style={{ fontSize: '1.1rem' }}>
+                        {loading ? <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> : null}
+                        {loading ? "Signing In..." : "Sign In"}
+                    </button>
+                    <div className="text-center mt-2">
+                        <span className="text-muted small">Don't have an account? </span>
+                        <Link to="/signup" className="fw-semibold text-decoration-none">Sign Up</Link>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 }
