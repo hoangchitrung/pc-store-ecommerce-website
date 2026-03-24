@@ -11,7 +11,7 @@ export function ProductForm({ formData, isEditing, isLoading, onChange, onSubmit
                         <input type="text" className="form-control" name="name" value={formData.name} onChange={onChange} required />
                     </div>
                     <div className="col-md-3">
-                        <label className="form-label fw-semibold">Giá ($) *</label>
+                        <label className="form-label fw-semibold">Giá (VNĐ) *</label>
                         <input type="number" className="form-control" name="price" value={formData.price} onChange={onChange} required />
                     </div>
                     <div className="col-md-3">

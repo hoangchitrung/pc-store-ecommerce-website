@@ -2,6 +2,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getProductById } from "../api/productApi.js"; 
 
+// Format number as Vietnamese đồng (VNĐ)
+const formatVND = (value) => {
+    const n = Number(value) || 0;
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+};
+
 export function ProductDetailsPage({ onAdd }) {
     const { id } = useParams();
     const navigate = useNavigate(); // Dùng để làm nút "Quay lại"
@@ -91,7 +97,7 @@ export function ProductDetailsPage({ onAdd }) {
                         <span className="badge bg-secondary fs-6 px-3 py-2">{product.category}</span>
                     </div>
 
-                    <h1 className="text-danger fw-bold mb-4">{product.price}$</h1>
+                    <h1 className="text-danger fw-bold mb-4">{formatVND(product.price)}</h1>
                     
                     {/* Mô tả ngắn */}
                     <p className="text-muted fs-5 mb-4" style={{ lineHeight: "1.6" }}>

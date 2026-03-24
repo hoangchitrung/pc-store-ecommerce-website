@@ -24,7 +24,7 @@ export function ProductTable({ products, onEdit, onDelete }) {
                                 {product.name}
                             </td>
                             <td>{product.brand}</td>
-                            <td className="text-danger fw-bold">{product.price}$</td>
+                            <td className="text-danger fw-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Number(product.price) || 0)}</td>
                             <td>
                                 {product.stock_quantity > 0 ? (
                                     <span className="badge bg-success">{product.stock_quantity}</span>

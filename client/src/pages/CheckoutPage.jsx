@@ -6,6 +6,11 @@ export function CheckoutPage({ cart }) {
     const navigate = useNavigate();
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
+    const formatVND = (value) => {
+        const n = Number(value) || 0;
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+    };
+
     // Form state: Nếu bạn đã có thông tin User từ Database khi đăng nhập, 
     // bạn có thể truyền vào làm giá trị mặc định ở đây (ví dụ: name: currentUser.name)
     const [formData, setFormData] = useState({
@@ -98,12 +103,12 @@ export function CheckoutPage({ cart }) {
                                             <small className="text-muted">x {item.quantity}</small>
                                         </div>
                                     </div>
-                                    <span className="fw-semibold">{item.price * item.quantity}$</span>
+                                    <span className="fw-semibold">{formatVND(item.price * item.quantity)}</span>
                                 </div>
                             ))}
                             <div className="d-flex justify-content-between align-items-center mt-4">
                                 <span className="fw-bold fs-5">Tổng cộng</span>
-                                <span className="fw-bold fs-3 text-danger">{total}$</span>
+                                <span className="fw-bold fs-3 text-danger">{formatVND(total)}</span>
                             </div>
                         </div>
                     </div>

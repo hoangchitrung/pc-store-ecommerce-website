@@ -1,20 +1,27 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
+// Format number as Vietnamese đồng (VNĐ)
+const formatVND = (value) => {
+    const n = Number(value) || 0;
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+};
 
 export function CartPage({ cart, setCart }) {
-    
+
     // 1. Hàm tăng số lượng (+)
     const handleIncrease = (product) => {
-        setCart(cart.map((item) => 
+        setCart(cart.map((item) =>
             item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         ));
     };
 
     // 2. Hàm giảm số lượng (-)
     const handleDecrease = (product) => {
-        setCart(cart.map((item) => 
+        setCart(cart.map((item) =>
             // Chỉ giảm khi số lượng đang lớn hơn 1 (Không cho giảm xuống 0)
-            item.id === product.id && item.quantity > 1 
-                ? { ...item, quantity: item.quantity - 1 } 
+            item.id === product.id && item.quantity > 1
+                ? { ...item, quantity: item.quantity - 1 }
                 : item
         ));
     };
@@ -49,7 +56,7 @@ export function CartPage({ cart, setCart }) {
         <div className="container mt-5 mb-5">
             <h2 className="fw-bold mb-4">Giỏ hàng của bạn</h2>
             <div className="row g-4">
-                
+
                 {/* Cột trái: Danh sách sản phẩm */}
                 <div className="col-lg-8">
                     <div className="card shadow-sm border-0">
@@ -69,38 +76,32 @@ export function CartPage({ cart, setCart }) {
                                         <tr key={item.id}>
                                             <td className="ps-4 py-3">
                                                 <div className="d-flex align-items-center">
-                                                    <img 
-                                                        src={item.image_url} 
-                                                        alt={item.name} 
-                                                        style={{ width: "60px", height: "60px", objectFit: "contain" }} 
-                                                        className="me-3 rounded bg-light border"
-                                                        onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/60?text=No+Image"; }}
-                                                    />
+                                                    <ImageWithFallbackSmall src={item.image_url} alt={item.name} />
                                                     <span className="fw-semibold text-truncate" style={{ maxWidth: "250px" }} title={item.name}>
                                                         {item.name}
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="text-center text-muted fw-semibold">{item.price}$</td>
+                                            <td className="text-center text-muted fw-semibold">{formatVND(item.price)}</td>
                                             <td className="text-center">
                                                 <div className="d-flex justify-content-center align-items-center">
-                                                    <button 
-                                                        className="btn btn-sm btn-outline-secondary px-2" 
-                                                        onClick={() => handleDecrease(item)} 
+                                                    <button
+                                                        className="btn btn-sm btn-outline-secondary px-2"
+                                                        onClick={() => handleDecrease(item)}
                                                         disabled={item.quantity <= 1} // Mờ nút trừ nếu số lượng là 1
                                                     >
                                                         <i className="fa-solid fa-minus"></i>
                                                     </button>
                                                     <span className="mx-3 fw-bold fs-5">{item.quantity}</span>
-                                                    <button 
-                                                        className="btn btn-sm btn-outline-secondary px-2" 
+                                                    <button
+                                                        className="btn btn-sm btn-outline-secondary px-2"
                                                         onClick={() => handleIncrease(item)}
                                                     >
                                                         <i className="fa-solid fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td className="text-center fw-bold text-danger">{item.price * item.quantity}$</td>
+                                            <td className="text-center fw-bold text-danger">{formatVND(item.price * item.quantity)}</td>
                                             <td className="text-center">
                                                 <button className="btn btn-sm btn-outline-danger" onClick={() => handleRemove(item)}>
                                                     <i className="fa-solid fa-trash"></i>
@@ -121,11 +122,11 @@ export function CartPage({ cart, setCart }) {
                             <h4 className="fw-bold mb-4 border-bottom pb-3">Tổng cộng</h4>
                             <div className="d-flex justify-content-between mb-3 fs-5">
                                 <span className="text-muted">Tạm tính:</span>
-                                <span className="fw-bold">{totalPrice}$</span>
+                                <span className="fw-bold">{formatVND(totalPrice)}</span>
                             </div>
                             <div className="d-flex justify-content-between mb-4 fs-4">
                                 <span className="fw-bold">Thành tiền:</span>
-                                <span className="fw-bold text-danger">{totalPrice}$</span>
+                                <span className="fw-bold text-danger">{formatVND(totalPrice)}</span>
                             </div>
                             <Link to="/checkout" className="btn btn-primary btn-lg w-100 fw-bold py-3 shadow-sm">
                                 TIẾN HÀNH THANH TOÁN
@@ -135,5 +136,27 @@ export function CartPage({ cart, setCart }) {
                 </div>
             </div>
         </div>
+    );
+}
+
+function ImageWithFallbackSmall({ src, alt }) {
+    const [error, setError] = useState(false);
+
+    if (error || !src) {
+        return (
+            <div className="d-flex align-items-center justify-content-center me-3 rounded bg-light border" style={{ width: 60, height: 60 }}>
+                <i className="fa-solid fa-image text-secondary"></i>
+            </div>
+        );
+    }
+
+    return (
+        <img
+            src={src}
+            alt={alt}
+            style={{ width: 60, height: 60, objectFit: 'contain' }}
+            className="me-3 rounded bg-light border"
+            onError={() => setError(true)}
+        />
     );
 }
