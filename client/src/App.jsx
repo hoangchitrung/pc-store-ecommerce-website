@@ -1,51 +1,57 @@
-import "./App.css";
-
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
-import { ProductCard } from "./components/ProductCard.jsx";
 import { CartPage } from "./pages/CartPage.jsx";
 import { HomePage } from "./pages/HomePage.jsx";
-import { ProductPage } from "./pages/ProductPage.jsx";
-import { Navbar } from "./components/Navbar.jsx";
-import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
-import { AdminPage } from "./pages/AdminPage.jsx";
+import { ProductPage } from "./pages/Product/ProductPage.jsx";
+import { ProductDetailsPage } from "./pages/Product/ProductDetailsPage.jsx";
+
+import { AdminPage } from "./pages/Admin/AdminPage.jsx";
+import { AdminOrderPage } from "./pages/Admin/AdminOrder.jsx";
+import { AdminProductManagement } from "./pages/Admin/AdminProductManagement.jsx";
+import { AdminInventory } from "./pages/Admin/AdminInventory.jsx";
+import AdminCustomerManagementPage from "./pages/Admin/AdminCustomerManagement.jsx";
+
 import { SignUpPage } from "./pages/SignUpPage.jsx";
 import { SignInPage } from "./pages/SignInPage.jsx";
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 function AppContent() {
-    const { pathname } = useLocation();
+  const { pathname } = useLocation();
+  const hideNavbar = pathname.startsWith("/admin") || pathname === "/signin" || pathname === "/signup";
 
-    const hideNavbar = pathname === "/signup" || pathname === "/signin";
-    return (
-        <>
-            {!hideNavbar && <Navbar />}
-            <Routes>
-                {/* Static route */}
-                {/* User, Admin */}
-                <Route path="/" element={<HomePage />}></Route>
-                <Route path="/products" element={<ProductPage />}></Route>
-                <Route path="/carts" element={<CartPage />}></Route>
+  return (
+    <>
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products" element={<ProductPage />} />
+        <Route path="/products/:id" element={<ProductDetailsPage />} />
+        <Route path="/carts" element={<CartPage />} />
 
-                {/* Auth routes */}
-                <Route path="/signup" element={<SignUpPage />}></Route>
-                <Route path="/signin" element={<SignInPage />}></Route>
+        {/* Auth */}
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/signin" element={<SignInPage />} />
 
-                {/* Admin */}
-                <Route path="/admin" element={<AdminPage />}></Route>
+        {/* Admin */}
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/orders" element={<AdminOrderPage />} />
+        <Route path="/admin/product" element={<AdminProductManagement />} />
+        <Route path="/admin/inventory" element={<AdminInventory />} />
+        <Route path="/admin/customers" element={<AdminCustomerManagementPage />} />
 
-                {/* Dynamic route */}
-                <Route path="products/:id" element={<ProductDetailsPage />}></Route>
-            </Routes>
-        </>
-    );
+      </Routes>
+    </>
+  );
 }
 
 function App() {
-    return (
-        <BrowserRouter>
-            <AppContent />
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
 }
 
 export default App;
