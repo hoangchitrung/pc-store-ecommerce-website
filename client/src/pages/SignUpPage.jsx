@@ -2,21 +2,17 @@ import { useState } from "react";
 import { registerUser } from "../api/authApi";
 import { Link, useNavigate } from "react-router-dom";
 
-
 export function SignUpPage() {
     const navigate = useNavigate();
-    // receive information from the input field
+
     const [form, setForm] = useState({
         fullName: "",
         email: "",
         password: "",
     });
 
-    // connection state
     const [loading, setLoading] = useState(false);
-    // display errors
     const [error, setError] = useState("");
-    // display success notifications
     const [success, setSuccess] = useState("");
 
     const onChange = (e) => {
@@ -32,48 +28,87 @@ export function SignUpPage() {
         try {
             setLoading(true);
 
-            // send only fields that backend expect
-            const payload = {
-                fullName: form.fullName,
-                email: form.email,
-                password: form.password,
-            };
+            await registerUser(form);
 
-            await registerUser(payload);
-            setSuccess("Register successful");
+            setSuccess("Register successful!");
             setForm({ fullName: "", email: "", password: "" });
-            navigate("/"); // redirect to homepage
-        } catch (error) {
-            setError(error.message || "Register successful");
+
+            setTimeout(() => navigate("/signin"), 1000);
+        } catch (err) {
+            setError(err.message || "Register failed");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <form className="sign-up-form" onSubmit={onSubmit}>
-            <h1>Sign Up</h1>
-            <div className="input-field">
-                <label htmlFor="fullname">Full Name:</label>
-                <input id="fullName" name="fullName" type="text" value={form.fullName} onChange={onChange} required />
-            </div>
+        <div className="container d-flex justify-content-center align-items-center vh-100">
+            <div className="card shadow p-4" style={{ width: "400px" }}>
+                <h3 className="text-center mb-3">Create Account</h3>
 
-            <div className="input-field">
-                <label htmlFor="email">Email:</label>
-                <input id="email" name="email" type="email" value={form.email} onChange={onChange} required />
-            </div>
+                <form onSubmit={onSubmit}>
+                    {/* Full Name */}
+                    <div className="mb-3">
+                        <label className="form-label">Full Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="fullName"
+                            value={form.fullName}
+                            onChange={onChange}
+                            required
+                        />
+                    </div>
 
-            <div className="input-field">
-                <label htmlFor="password">Password:</label>
-                <input id="password" name="password" type="password" value={form.password} onChange={onChange} required />
-            </div>
+                    {/* Email */}
+                    <div className="mb-3">
+                        <label className="form-label">Email</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            name="email"
+                            value={form.email}
+                            onChange={onChange}
+                            required
+                        />
+                    </div>
 
-            {error && <p style={{ color: "crimson" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>{success}</p>}
-            <button className="sign-up-button" type="submit" disabled={loading}>{loading ? "Signing up..." : "Sign Up"}</button>
-            <p className="sign-in-hint">
-                Already have an account? <Link to="/signin">Sign In</Link>
-            </p>
-        </form>
+                    {/* Password */}
+                    <div className="mb-3">
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            name="password"
+                            value={form.password}
+                            onChange={onChange}
+                            required
+                        />
+                    </div>
+
+                    {/* Error / Success */}
+                    {error && (
+                        <div className="alert alert-danger p-2">{error}</div>
+                    )}
+                    {success && (
+                        <div className="alert alert-success p-2">{success}</div>
+                    )}
+
+                    {/* Button */}
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-100"
+                        disabled={loading}
+                    >
+                        {loading ? "Signing up..." : "Sign Up"}
+                    </button>
+                </form>
+
+                <p className="text-center mt-3 mb-0">
+                    Already have an account?{" "}
+                    <Link to="/signin">Sign In</Link>
+                </p>
+            </div>
+        </div>
     );
 }

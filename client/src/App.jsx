@@ -1,15 +1,16 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 import { CartPage } from "./pages/CartPage.jsx";
 import { HomePage } from "./pages/HomePage.jsx";
-import { ProductPage } from "./pages/Product/ProductPage.jsx";
-import { ProductDetailsPage } from "./pages/Product/ProductDetailsPage.jsx";
+import { ProductPage } from "./pages/ProductPage.jsx";
+import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
 
-import { AdminPage } from "./pages/Admin/AdminPage.jsx";
-import { AdminOrderPage } from "./pages/Admin/AdminOrder.jsx";
-import { AdminProductManagement } from "./pages/Admin/AdminProductManagement.jsx";
-import { AdminInventory } from "./pages/Admin/AdminInventory.jsx";
-import AdminCustomerManagementPage from "./pages/Admin/AdminCustomerManagement.jsx";
+import { AdminPage } from "./pages/AdminPage.jsx";
+import { AdminOrderPage } from "./pages/AdminOrder.jsx";
+import { AdminProductManagement } from "./pages/AdminProductManagement.jsx";
+import { AdminInventory } from "./pages/AdminInventory.jsx";
+import AdminCustomerManagementPage from "./pages/AdminCustomerManagement.jsx";
 
 import { SignUpPage } from "./pages/SignUpPage.jsx";
 import { SignInPage } from "./pages/SignInPage.jsx";
@@ -19,7 +20,11 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function AppContent() {
   const { pathname } = useLocation();
-  const hideNavbar = pathname.startsWith("/admin") || pathname === "/signin" || pathname === "/signup";
+
+  const hideNavbar =
+    pathname.startsWith("/admin") ||
+    pathname === "/signin" ||
+    pathname === "/signup";
 
   return (
     <>
@@ -34,13 +39,61 @@ function AppContent() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/signin" element={<SignInPage />} />
 
-        {/* Admin */}
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/admin/orders" element={<AdminOrderPage />} />
-        <Route path="/admin/product" element={<AdminProductManagement />} />
-        <Route path="/admin/inventory" element={<AdminInventory />} />
-        <Route path="/admin/customers" element={<AdminCustomerManagementPage />} />
+        {/* Admin Dashboard */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin pages */}
+        <Route
+          path="/admin/orders"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminOrderPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/product"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminProductManagement />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/inventory"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminInventory />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/customers"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminCustomerManagementPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );
