@@ -48,6 +48,13 @@ function AuthButtons() {
             </div>
         );
     }
+
+    return (
+        <div className="d-flex gap-2">
+            <Link to="/signin" className="btn btn-outline-primary btn-sm">Sign In</Link>
+            <Link to="/signup" className="btn btn-primary btn-sm">Sign Up</Link>
+        </div>
+    );
 }
 
 export function Navbar() {
