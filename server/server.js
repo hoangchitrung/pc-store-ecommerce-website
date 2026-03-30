@@ -26,6 +26,8 @@ app.use("/api/v1/auth", authRoutes);
 const orderRoutes = require("./routes/orderRoutes");
 app.use("/api/orders", orderRoutes);
 
+const customerRoutes = require("./routes/customerRoutes");
+app.use("/api/customers", customerRoutes);
 // ── Start ────────────────────────────────────────────────────
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
