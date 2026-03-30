@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
 
         return res.status(201).json({
             message: "Register successful",
-            user: { id, fullName, email },
+            user: { id, fullName, email, role: "user" },
         });
     } catch (error) {
         res.status(500).json({ message: `Database error: ${error.message}` });
@@ -47,20 +47,31 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
+        // 🔥 FIX ROLE
+        const role = user.user_type || user.role;
+
         const token = jwt.sign(
-            { sub: user.id, email: user.email },
+            { sub: user.id, email: user.email, role },
             process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN || "1d" },
+            { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
         );
 
         res.cookie("accessToken", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 24 * 60 * 60 * 1000
-        })
+            maxAge: 24 * 60 * 60 * 1000,
+        });
 
-        return res.status(200).json({ message: "Login successful" });
+        return res.status(200).json({
+            message: "Login successful",
+            user: {
+                id: user.id,
+                fullName: user.full_name,
+                email: user.email,
+                role: role ? role.toLowerCase() : null, // 🔥 FIX
+            },
+        });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -68,10 +79,13 @@ exports.login = async (req, res) => {
 
 exports.me = async (req, res) => {
     try {
+        const user = await userService.getUserById(req.user.sub);
         return res.status(200).json({
             user: {
                 id: req.user.sub,
                 email: req.user.email || null,
+                fullName: user?.full_name || null,
+                role: (user?.user_type || user?.role || "user").toLowerCase(), // 🔥 FIX
             },
         });
     } catch (error) {

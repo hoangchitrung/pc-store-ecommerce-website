@@ -5,37 +5,24 @@ import { loginUser, getMe } from "../api/authApi";
 
 export function SignInPage() {
     const navigate = useNavigate();
-    // receive information from the input field
-    const [form, setForm] = useState({
-        email: "",
-        password: ""
-    });
-
-    // connection state
+    const [form, setForm] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
-    // display errors
     const [error, setError] = useState("");
-    // display success
-    const [success, setSuccess] = useState("");
 
-    const onChange = (e) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-    }
-
-    const onSubmit = async (e) => {
-        e.preventDefault();
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
         setError("");
-        setSuccess("");
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
 
         try {
-            setLoading(true);
+            const res = await loginUser(form);
 
-            // send only fields that backend expect
-            const payload = {
-                email: form.email,
-                password: form.password
-            };
+            console.log("LOGIN RESPONSE:", res);
 
             const data = await loginUser(payload);
 
@@ -61,13 +48,36 @@ export function SignInPage() {
             setSuccess("Login success");
             setForm({ email: "", password: "" });
 
-            navigate("/"); // redirect homepage
-        } catch (error) {
-            setError(error.message || "Login failed");
+            if (!user) {
+                throw new Error("Không lấy được thông tin user");
+            }
+
+            console.log("USER:", user);
+
+            // 🔥 FIX: đảm bảo role luôn có
+            const role = user?.role?.toLowerCase();
+
+            if (!role) {
+                console.error("FULL RESPONSE:", res);
+                throw new Error("User don't have a role");
+            }
+
+            // 🔥 Lưu user vào localStorage
+            localStorage.setItem("user", JSON.stringify(user));
+
+            // 🔥 Phân quyền
+            if (role === "admin") {
+                navigate("/admin/dashboard");
+            } else {
+                navigate("/");
+            }
+
+        } catch (err) {
+            setError(err.message || "Login failed");
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
         <div className="container d-flex align-items-center justify-content-center min-vh-100 bg-light">

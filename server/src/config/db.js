@@ -1,22 +1,37 @@
 const mysql = require("mysql2");
 require("dotenv").config();
 
+<<<<<<< HEAD:server/src/config/db.js
 // thêm dấu hoặc để chạy api
 const connection = mysql.createConnection({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "",
     database: process.env.DB_DATABASE || "techforge_database", 
+=======
+// Tạo connection
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME, //  sửa đúng tên biến
+>>>>>>> origin/Hao:server/config/db.js
 });
 
+// Kết nối database
 connection.connect((err) => {
     if (err) {
-        console.error(`Failed to connect MySQL: ${err}`);
-        return;
+        console.error(" Failed to connect MySQL:");
+        console.error(err.message);
+        process.exit(1); // dừng server nếu DB lỗi
     }
 
-    console.log(process.env.DB_DATABASE);
-    console.log("Database connected!");
+    console.log(" Database connected!");
+    console.log(" DB Info:", {
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        database: process.env.DB_NAME,
+    });
 });
 
 module.exports = connection;

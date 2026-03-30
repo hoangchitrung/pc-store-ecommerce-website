@@ -2,7 +2,11 @@ import axios from "axios";
 
 // 1. Dùng Axios instance với Port 5000 theo đúng backend
 const productApi = axios.create({
+<<<<<<< HEAD
     baseURL: "http://localhost:5000/api/products", // Đã cập nhật port 5000
+=======
+    baseURL: "http://localhost:5000/api/products",
+>>>>>>> origin/Hao
     headers: { "Content-Type": "application/json" },
 });
 
