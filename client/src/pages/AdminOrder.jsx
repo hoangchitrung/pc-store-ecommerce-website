@@ -90,15 +90,18 @@ export function AdminOrderPage() {
 
     const handleCancel = async () => {
         if (!detail) return;
-        if (!window.confirm("Cancel this order?")) return;
+        // Khi không dùng window.confirm, cẩn thận nếu muốn UI confirm khác
         setUpdating(true);
         try {
             await cancelOrder(detail.id);
             fetchOrders();
             const updated = await getOrderById(detail.id);
             setDetail(updated);
-        } catch (err) { alert(err.message); }
-        finally { setUpdating(false); }
+        } catch (err) {
+            console.error(err.message);
+        } finally {
+            setUpdating(false);
+        }
     };
 
     const ss = (status) => STATUS_STYLE[status?.toLowerCase()] || STATUS_STYLE["pending"];

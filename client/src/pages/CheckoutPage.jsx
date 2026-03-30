@@ -30,7 +30,8 @@ export function CheckoutPage({ cart }) {
         e.preventDefault();
 
         if (cart.length === 0) {
-            alert("Giỏ hàng trống!");
+            setIsLoading(false);
+            // No alert: show inline message/state if needed
             return;
         }
 
@@ -50,7 +51,7 @@ export function CheckoutPage({ cart }) {
             }
         } catch (error) {
             console.error("Lỗi thanh toán:", error);
-            alert("Có lỗi xảy ra khi tạo link thanh toán. Vui lòng thử lại!");
+            // No alert, optionally set an error state
             setIsLoading(false);
         }
     };

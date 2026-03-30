@@ -6,17 +6,21 @@ import { getProducts } from "../api/productApi";
 const pad = (n) => String(n).padStart(2, "0");
 
 const CATEGORY_META = {
-    CPU: { label: "Processors", icon: "bi-cpu", color: "#3b82f6" },
-    GPU: { label: "Graphics Cards", icon: "bi-gpu-card", color: "#8b5cf6" },
-    RAM: { label: "RAM & Memory", icon: "bi-memory", color: "#10b981" },
-    Storage: { label: "SSD Storage", icon: "bi-device-hdd", color: "#f59e0b" },
-    Motherboard: { label: "Motherboards", icon: "bi-motherboard", color: "#ef4444" },
-    Case: { label: "PC Cases", icon: "bi-box", color: "#6366f1" },
+    CPU: { label: "Processors", icon: "fa-solid fa-microchip", color: "#3b82f6" },
+    GPU: { label: "Graphics Cards", icon: "fa-solid fa-cubes", color: "#8b5cf6" },
+    RAM: { label: "RAM & Memory", icon: "fa-solid fa-memory", color: "#10b981" },
+    Storage: { label: "SSD Storage", icon: "fa-solid fa-hdd", color: "#f59e0b" },
+    Motherboard: { label: "Motherboards", icon: "fa-solid fa-plug-circle-bolt", color: "#ef4444" },
+    Monitors: { label: "Monitors", icon: "fa-solid fa-desktop", color: "#14b8a6" },
+    Case: { label: "PC Cases", icon: "fa-solid fa-box", color: "#6366f1" },
 };
 
+const TOP_CATEGORIES = ["CPU", "GPU", "Monitors", "Storage", "Motherboard", "Case"];
+
 function deriveCategories(products) {
-    const categories = Array.from(new Set((products || []).map((p) => p.category).filter(Boolean)));
-    return categories.map((cat) => ({
+    const productCategories = Array.from(new Set((products || []).map((p) => p.category).filter(Boolean)));
+    const ordered = Array.from(new Set([...TOP_CATEGORIES, ...productCategories]));
+    return ordered.map((cat) => ({
         label: CATEGORY_META[cat]?.label || cat,
         icon: CATEGORY_META[cat]?.icon || "bi-tag",
         color: CATEGORY_META[cat]?.color || "#2563EB",
@@ -68,7 +72,7 @@ function ProductCard({ product, onClick }) {
             </p>
             <div className="d-flex align-items-center justify-content-between mt-1">
                 <span className="fw-bold" style={{ color: "#ef4444", fontSize: 14 }}>
-                    ${Number(product.price).toFixed(2)}
+                    {Number(product.price).toLocaleString("vi-VN")} đ
                 </span>
                 {product.stock_quantity > 0 ? (
                     <span style={{ fontSize: 10, color: "#16a34a" }}>
@@ -154,8 +158,8 @@ export function HomePage() {
                                 <div className="d-flex gap-2">
                                     <button className="btn px-4 py-2 text-white fw-semibold"
                                         style={{ background: "#2563EB", fontSize: 13 }}
-                                        onClick={() => navigate("/products")}>
-                                        Shop Now
+                                        onClick={() => navigate("/build")}>
+                                        Build PC
                                     </button>
                                     <button className="btn px-4 py-2 fw-semibold"
                                         style={{ background: "rgba(255,255,255,0.1)", color: "white", fontSize: 13, border: "1px solid rgba(255,255,255,0.2)" }}
@@ -173,9 +177,9 @@ export function HomePage() {
                     {/* Side promo cards */}
                     <div className="col-12 col-lg-4 d-flex flex-column gap-2">
                         {[
-                            { title: "PC Builder", sub: "Build your dream machine", link: "Start Building →", color: "#2563EB", icon: "bi-cpu" },
-                            { title: "Pre-Built PCs", sub: "Plug and Play Ready", link: "View Systems →", color: "#7c3aed", icon: "bi-pc-display" },
-                            { title: "Hot Deals", sub: "Best prices guaranteed", link: "Grab Deals →", color: "#d97706", icon: "bi-tag" },
+                            { title: "PC Builder", sub: "Build your dream machine", link: "Start Building →", color: "#2563EB", icon: "fa-solid fa-computer" },
+                            { title: "Pre-Built PCs", sub: "Plug and Play Ready", link: "View Systems →", color: "#7c3aed", icon: "fa-solid fa-desktop" },
+                            { title: "Hot Deals", sub: "Best prices guaranteed", link: "Grab Deals →", color: "#d97706", icon: "fa-solid fa-tag" },
                         ].map((card) => (
                             <div key={card.title}
                                 className="bg-white rounded-2 border d-flex align-items-center gap-3 px-3 py-2 flex-fill"
@@ -185,7 +189,7 @@ export function HomePage() {
                                 onMouseLeave={e => { e.currentTarget.style.borderColor = ""; e.currentTarget.style.transform = ""; }}>
                                 <div className="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0"
                                     style={{ width: 44, height: 44, background: card.color + "15" }}>
-                                    <i className={`bi ${card.icon}`} style={{ fontSize: 22, color: card.color }} />
+                                    <i className={card.icon} style={{ fontSize: 22, color: card.color }} />
                                 </div>
                                 <div>
                                     <div className="fw-semibold" style={{ fontSize: 14, color: card.color }}>{card.title}</div>
@@ -286,7 +290,7 @@ export function HomePage() {
                                     onMouseLeave={e => { e.currentTarget.style.borderColor = ""; e.currentTarget.style.background = ""; }}>
                                     <div className="d-flex align-items-center justify-content-center rounded-2 mx-auto mb-2"
                                         style={{ width: 52, height: 52, background: cat.color ? cat.color + "15" : "#f0f0f0" }}>
-                                        <i className={`bi ${cat.icon}`} style={{ fontSize: 24, color: cat.color || "#64748b" }} />
+                                        <i className={cat.icon} style={{ fontSize: 24, color: cat.color || "#64748b" }} />
                                     </div>
                                     <div style={{ fontSize: 12, fontWeight: 500, color: "#333" }}>{cat.label}</div>
                                 </div>

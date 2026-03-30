@@ -152,7 +152,7 @@ export function AdminProductManagement() {
             setDeleteId(null);
             fetchProducts();
         } catch (err) {
-            alert(err.message);
+            console.error(err.message);
         } finally {
             setDeleting(false);
         }

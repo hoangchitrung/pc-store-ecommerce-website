@@ -75,10 +75,10 @@ export function Navbar() {
                 </div>
 
                 <div className="d-flex gap-4 mx-3">
-                    <a href="#" className="gap-2 text-decoration-none text-muted fw-semibold d-flex flex-column align-items-center">
+                    <Link to="/build" className="gap-2 text-decoration-none text-muted fw-semibold d-flex flex-column align-items-center">
                         <i className="fa-solid fa-computer fa-xl mb-1"></i>
                         <span className="large">Build PC</span>
-                    </a>
+                    </Link>
                     <Link to="/carts" className="gap-2 text-decoration-none text-muted fw-semibold d-flex flex-column align-items-center">
                         <i className="fa-solid fa-cart-arrow-down fa-xl mb-1"></i>
                         <span className="large">Cart</span>

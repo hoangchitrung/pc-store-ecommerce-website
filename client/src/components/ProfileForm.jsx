@@ -33,7 +33,7 @@ function ProfileForm() {
             body: JSON.stringify(user)
         })
             .then(res => res.json())
-            .then(data => alert("Updated successfully"));
+            .then(() => console.log("Cập nhật thông tin thành công."));
     };
 
     return (
