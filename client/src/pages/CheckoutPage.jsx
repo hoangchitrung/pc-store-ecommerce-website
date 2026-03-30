@@ -28,7 +28,7 @@ export function CheckoutPage({ cart }) {
     // Hàm gọi API PayOS khi bấm thanh toán
     const handlePayment = async (e) => {
         e.preventDefault();
-        
+
         if (cart.length === 0) {
             alert("Giỏ hàng trống!");
             return;
@@ -76,7 +76,7 @@ export function CheckoutPage({ cart }) {
                                     <label className="form-label fw-semibold">Địa chỉ nhận hàng</label>
                                     <textarea className="form-control" name="address" rows="3" value={formData.address} onChange={handleChange} required placeholder="Nhập địa chỉ chi tiết (Số nhà, đường, phường/xã, quận/huyện)"></textarea>
                                 </div>
-                                
+
                                 <button type="submit" className="btn btn-primary w-100 py-3 fs-5 fw-bold rounded-3 shadow" disabled={isLoading}>
                                     {isLoading ? (
                                         <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Đang tạo mã QR...</>

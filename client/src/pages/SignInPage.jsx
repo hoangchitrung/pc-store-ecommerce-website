@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginUser, getMe } from "../api/authApi";
+import { loginUser } from "../api/authApi";
 
 
 export function SignInPage() {
@@ -8,6 +8,7 @@ export function SignInPage() {
     const [form, setForm] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,60 +19,29 @@ export function SignInPage() {
         e.preventDefault();
         setLoading(true);
         setError("");
+        setSuccess("");
 
         try {
-            const res = await loginUser(form);
+            const data = await loginUser(form);
 
-            console.log("LOGIN RESPONSE:", res);
-
-            const data = await loginUser(payload);
-
-            // If backend returned user/token directly, persist them
-            if (data) {
-                if (data.token) localStorage.setItem('token', data.token);
-                if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
+            if (!data || !data.user) {
+                throw new Error("Đăng nhập thất bại. Vui lòng kiểm tra email/password.");
             }
 
-            // If backend didn't return user info, try fetching /me
-            if (!localStorage.getItem('user')) {
-                try {
-                    const me = await getMe();
-                    if (me) localStorage.setItem('user', JSON.stringify(me));
-                } catch (e) {
-                    // ignore — UI will fallback
-                }
-            }
+            localStorage.setItem("user", JSON.stringify(data.user));
 
-            // notify other components (Navbar) that auth state changed
-            window.dispatchEvent(new Event('authChange'));
+            window.dispatchEvent(new Event("authChange"));
 
-            setSuccess("Login success");
+            setSuccess("Đăng nhập thành công.");
             setForm({ email: "", password: "" });
 
-            if (!user) {
-                throw new Error("Không lấy được thông tin user");
-            }
-
-            console.log("USER:", user);
-
-            // 🔥 FIX: đảm bảo role luôn có
-            const role = user?.role?.toLowerCase();
-
-            if (!role) {
-                console.error("FULL RESPONSE:", res);
-                throw new Error("User don't have a role");
-            }
-
-            // 🔥 Lưu user vào localStorage
-            localStorage.setItem("user", JSON.stringify(user));
-
-            // 🔥 Phân quyền
-            if (role === "admin") {
-                navigate("/admin/dashboard");
+            // Phân quyền nếu có
+            const role = (data.user.role || "").toLowerCase();
+            if (role === "admin" || role === "staff") {
+                navigate("/admin");
             } else {
                 navigate("/");
             }
-
         } catch (err) {
             setError(err.message || "Login failed");
         } finally {
@@ -82,17 +52,17 @@ export function SignInPage() {
     return (
         <div className="container d-flex align-items-center justify-content-center min-vh-100 bg-light">
             <div className="card shadow-lg p-4" style={{ maxWidth: 400, width: '100%' }}>
-                <form onSubmit={onSubmit} autoComplete="off">
+                <form onSubmit={handleSubmit} autoComplete="off">
                     <h2 className="mb-4 text-center fw-bold">Sign In</h2>
 
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">Email</label>
-                        <input id="email" name="email" type="email" className="form-control form-control-lg" value={form.email} onChange={onChange} required autoFocus />
+                        <input id="email" name="email" type="email" className="form-control form-control-lg" value={form.email} onChange={handleChange} required autoFocus />
                     </div>
 
                     <div className="mb-3">
                         <label htmlFor="password" className="form-label">Password</label>
-                        <input id="password" name="password" type="password" className="form-control form-control-lg" value={form.password} onChange={onChange} required />
+                        <input id="password" name="password" type="password" className="form-control form-control-lg" value={form.password} onChange={handleChange} required />
                     </div>
 
                     {error && <div className="alert alert-danger py-2 small mb-2">{error}</div>}

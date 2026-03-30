@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getProductById } from "../api/productApi.js"; 
+import { getProductById } from "../api/productApi.js";
 
 // Format number as Vietnamese đồng (VNĐ)
 const formatVND = (value) => {
@@ -11,7 +11,7 @@ const formatVND = (value) => {
 export function ProductDetailsPage({ onAdd }) {
     const { id } = useParams();
     const navigate = useNavigate(); // Dùng để làm nút "Quay lại"
-    
+
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -30,8 +30,8 @@ export function ProductDetailsPage({ onAdd }) {
     let specsObj = {};
     if (product && product.specifications) {
         try {
-            specsObj = typeof product.specifications === 'string' 
-                ? JSON.parse(product.specifications) 
+            specsObj = typeof product.specifications === 'string'
+                ? JSON.parse(product.specifications)
                 : product.specifications;
         } catch (e) {
             console.error("Không thể đọc thông số kỹ thuật", e);
@@ -74,14 +74,14 @@ export function ProductDetailsPage({ onAdd }) {
                 {/* Cột trái: Hình ảnh sản phẩm */}
                 <div className="col-md-5 text-center">
                     <div className="card border-0 shadow-sm p-4 bg-white rounded-4">
-                        <img 
-                            src={product.image_url} 
-                            alt={product.name} 
+                        <img
+                            src={product.image_url}
+                            alt={product.name}
                             className="img-fluid"
                             style={{ maxHeight: "400px", objectFit: "contain" }}
-                            onError={(e) => { 
-                                e.target.onerror = null; 
-                                e.target.src = "https://via.placeholder.com/400?text=No+Image"; 
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://via.placeholder.com/400?text=No+Image";
                             }}
                         />
                     </div>
@@ -90,7 +90,7 @@ export function ProductDetailsPage({ onAdd }) {
                 {/* Cột phải: Thông tin & Đặt hàng */}
                 <div className="col-md-7">
                     <h2 className="fw-bold mb-3">{product.name}</h2>
-                    
+
                     {/* Các nhãn dán (Badges) */}
                     <div className="mb-3">
                         <span className="badge bg-dark fs-6 me-2 px-3 py-2">{product.brand}</span>
@@ -98,7 +98,7 @@ export function ProductDetailsPage({ onAdd }) {
                     </div>
 
                     <h1 className="text-danger fw-bold mb-4">{formatVND(product.price)}</h1>
-                    
+
                     {/* Mô tả ngắn */}
                     <p className="text-muted fs-5 mb-4" style={{ lineHeight: "1.6" }}>
                         {product.description || "Chưa có bài viết mô tả chi tiết cho sản phẩm này."}
@@ -122,8 +122,8 @@ export function ProductDetailsPage({ onAdd }) {
                     </div>
 
                     {/* Nút thêm vào giỏ */}
-                    <button 
-                        className={`btn btn-lg w-100 py-3 fw-bold shadow-sm ${product.stock_quantity > 0 ? 'btn-danger' : 'btn-secondary'}`} 
+                    <button
+                        className={`btn btn-lg w-100 py-3 fw-bold shadow-sm ${product.stock_quantity > 0 ? 'btn-danger' : 'btn-secondary'}`}
                         onClick={() => onAdd(product)}
                         disabled={product.stock_quantity <= 0}
                     >

@@ -7,18 +7,19 @@ const formatVND = (value) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
 };
 
-export function CartPage({ cart, setCart }) {
+export function CartPage({ cart = [], setCart }) {
+    const safeCart = Array.isArray(cart) ? cart : [];
 
     // 1. Hàm tăng số lượng (+)
     const handleIncrease = (product) => {
-        setCart(cart.map((item) =>
+        setCart(safeCart.map((item) =>
             item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         ));
     };
 
     // 2. Hàm giảm số lượng (-)
     const handleDecrease = (product) => {
-        setCart(cart.map((item) =>
+        setCart(safeCart.map((item) =>
             // Chỉ giảm khi số lượng đang lớn hơn 1 (Không cho giảm xuống 0)
             item.id === product.id && item.quantity > 1
                 ? { ...item, quantity: item.quantity - 1 }
@@ -30,15 +31,15 @@ export function CartPage({ cart, setCart }) {
     const handleRemove = (product) => {
         if (window.confirm(`Bạn có chắc chắn muốn xóa ${product.name} khỏi giỏ hàng?`)) {
             // Lọc và giữ lại những item có id KHÁC với id của sản phẩm vừa bấm xóa
-            setCart(cart.filter((item) => item.id !== product.id));
+            setCart(safeCart.filter((item) => item.id !== product.id));
         }
     };
 
     // Tính tổng tiền của toàn bộ giỏ hàng
-    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const totalPrice = safeCart.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0), 0);
 
     // Giao diện khi giỏ hàng trống
-    if (cart.length === 0) {
+    if (safeCart.length === 0) {
         return (
             <div className="container mt-5 mb-5 text-center py-5 bg-white shadow-sm rounded">
                 <i className="fa-solid fa-cart-arrow-down text-muted mb-3" style={{ fontSize: "4rem" }}></i>
@@ -72,7 +73,7 @@ export function CartPage({ cart, setCart }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {cart.map((item) => (
+                                    {safeCart.map((item) => (
                                         <tr key={item.id}>
                                             <td className="ps-4 py-3">
                                                 <div className="d-flex align-items-center">

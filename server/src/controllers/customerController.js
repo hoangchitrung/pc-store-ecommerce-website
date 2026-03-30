@@ -1,8 +1,8 @@
 const db = require("../config/db");
 
 exports.getCustomers = async (req, res) => {
-  try {
-    const [rows] = await db.query(`
+    try {
+        const [rows] = await db.query(`
       SELECT 
         id,
         fullname,
@@ -16,13 +16,13 @@ exports.getCustomers = async (req, res) => {
       ORDER BY id DESC
     `);
 
-    res.json(rows);
+        res.json(rows);
 
-  } catch (error) {
-    console.error("🔥 Get customers error:", error);
+    } catch (error) {
+        console.error("🔥 Get customers error:", error);
 
-    res.status(500).json({
-      message: error.message
-    });
-  }
+        res.status(500).json({
+            message: error.message
+        });
+    }
 };

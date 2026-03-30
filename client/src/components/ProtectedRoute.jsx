@@ -20,13 +20,13 @@ export function ProtectedRoute({ children, adminOnly = false }) {
 
     const role = user?.role?.toLowerCase();
 
-    
+
     if (!role) {
         localStorage.removeItem("user");
         return <Navigate to="/signin" />;
     }
 
-    
+
     if (adminOnly && role !== "admin") {
         return <Navigate to="/" />;
     }

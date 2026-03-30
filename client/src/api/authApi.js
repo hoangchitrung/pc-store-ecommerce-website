@@ -8,10 +8,10 @@ const api = axios.create({
 
 // Helper function to extract data from response
 function extractData(response) {
-    
+
     const data = response?.data;
 
-    
+
     return data?.data || data;
 }
 

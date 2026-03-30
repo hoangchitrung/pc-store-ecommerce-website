@@ -11,7 +11,7 @@ import { SignInPage } from "./pages/SignInPage.jsx";
 import { Navbar } from "./components/Navbar.jsx";
 
 function AppContent() {
-  const { pathname } = useLocation();
+    const { pathname } = useLocation();
 
     const hideNavbar = pathname === "/signup" || pathname === "/signin";
     return (
