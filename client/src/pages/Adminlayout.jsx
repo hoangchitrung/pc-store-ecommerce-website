@@ -21,8 +21,7 @@ export function AdminLayout({ children }) {
 
     return (
         <div style={{ display: "flex", height: "100vh", fontFamily: "'Segoe UI', sans-serif", background: "#f8f8f6", overflow: "hidden" }}>
-
-            {/* ── Sidebar ── */}
+{ /* Sidebar */ }
             <aside style={{ width: 210, minWidth: 210, background: "white", borderRight: "1px solid #ebebeb", display: "flex", flexDirection: "column" }}>
 
                 {/* Logo */}
@@ -79,8 +78,7 @@ export function AdminLayout({ children }) {
                     <i className="bi bi-box-arrow-right" style={{ fontSize: 14, color: "#ccc", cursor: "pointer" }} />
                 </div>
             </aside>
-
-            {/* ── Main content ── */}
+{ /* Main content */ }
             <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "auto", minWidth: 0 }}>
                 {children}
             </div>

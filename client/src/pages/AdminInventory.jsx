@@ -37,7 +37,7 @@ export function AdminInventory() {
 
     useEffect(() => { fetchProducts(); }, []);
 
-    // ── Stats ──────────────────────────────────────────────
+    // Stats
     const totalProducts = products.length;
     const totalValue = products.reduce((s, p) => s + Number(p.price || 0) * Number(p.stock_quantity || 0), 0);
     const lowStockItems = products.filter((p) => p.stock_quantity > 0 && p.stock_quantity <= 20).length;
@@ -45,7 +45,7 @@ export function AdminInventory() {
 
     const categories = ["All", ...Array.from(new Set(products.map((p) => p.category).filter(Boolean)))];
 
-    // ── Filter ─────────────────────────────────────────────
+    // Filter
     const filtered = products.filter((p) => {
         const mSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
             (p.brand || "").toLowerCase().includes(search.toLowerCase());
@@ -58,7 +58,7 @@ export function AdminInventory() {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-    // ── Adjust stock ───────────────────────────────────────
+    // Adjust stock
     const openAdjust = (p) => {
         setAdjust(p);
         setNewStock(String(p.stock_quantity));
@@ -83,7 +83,7 @@ export function AdminInventory() {
 
     return (
         <AdminLayout>
-            {/* ── Topbar ── */}
+            { /* Topbar */}
             <header style={{ background: "white", borderBottom: "1px solid #ebebeb", padding: "10px 24px", display: "flex", alignItems: "center", gap: 12, position: "sticky", top: 0, zIndex: 100 }}>
                 <nav style={{ fontSize: 13, color: "#888", display: "flex", alignItems: "center", gap: 6 }}>
                     <a href="/admin" style={{ color: "#888", textDecoration: "none" }}>Dashboard</a>
@@ -97,8 +97,7 @@ export function AdminInventory() {
                     </div>
                 </div>
             </header>
-
-            {/* ── Content ── */}
+            { /* Content */}
             <div style={{ padding: "24px", flex: 1 }}>
 
                 {/* Page header */}
@@ -112,8 +111,7 @@ export function AdminInventory() {
                         <i className="bi bi-arrow-clockwise" /> Refresh
                     </button>
                 </div>
-
-                {/* ── Stats ── */}
+                { /* Stats */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: 12, marginBottom: 20 }}>
                     {[
                         { label: "TOTAL PRODUCTS", value: loading ? "—" : totalProducts, icon: "bi-box-seam", iconBg: "#eff6ff", iconColor: "#2563EB" },
@@ -134,8 +132,7 @@ export function AdminInventory() {
                         </div>
                     ))}
                 </div>
-
-                {/* ── Table card ── */}
+                { /* Table card */}
                 <div style={{ background: "white", border: "1px solid #ebebeb", borderRadius: 12, overflow: "hidden" }}>
 
                     {/* Filters */}
@@ -295,8 +292,7 @@ export function AdminInventory() {
                     )}
                 </div>
             </div>
-
-            {/* ── Adjust Stock Modal ── */}
+            { /* Adjust Stock Modal */}
             {adjustItem && (
                 <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
                     <div style={{ background: "white", borderRadius: 14, width: "100%", maxWidth: 400, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>

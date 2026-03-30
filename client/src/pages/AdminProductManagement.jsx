@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { AdminLayout } from "./Adminlayout";
 import {
     getProducts,
@@ -7,8 +7,7 @@ import {
     deleteProduct,
 } from "../api/productApi";
 
-// ── Constants ──────────────────────────────────────────────
-const CATEGORIES = ["All", "CPU", "GPU", "RAM", "Storage", "Motherboard", "PSU", "Cooling", "Case", "Monitor", "Peripherals"];
+// Constants
 const PAGE_SIZE = 8;
 
 const initForm = {
@@ -17,7 +16,7 @@ const initForm = {
     specifications: "", serial_number_required: false, is_active: true,
 };
 
-// ── Status helper ──────────────────────────────────────────
+// Status helper
 function getStatus(p) {
     if (!p.is_active) return "Inactive";
     if (p.stock_quantity === 0) return "Out of Stock";
@@ -32,7 +31,7 @@ const STATUS_STYLE = {
     "Inactive": { bg: "#f1f5f9", color: "#64748b", dot: "#94a3b8" },
 };
 
-// ── Main Component ─────────────────────────────────────────
+// Main Component
 export function AdminProductManagement() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -50,7 +49,9 @@ export function AdminProductManagement() {
     const [deleting, setDeleting] = useState(false);
     const [globalSearch, setGS] = useState("");
 
-    // ── Fetch ──────────────────────────────────────────────
+    const categories = useMemo(() => ["All", ...Array.from(new Set(products.map((p) => p.category).filter(Boolean)))], [products]);
+
+    // Fetch
     const fetchProducts = () => {
         setLoading(true);
         setError("");
@@ -62,7 +63,7 @@ export function AdminProductManagement() {
 
     useEffect(() => { fetchProducts(); }, []);
 
-    // ── Filter + Paginate ──────────────────────────────────
+    // Filter + Paginate
     const filtered = products.filter((p) => {
         const mSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
             (p.brand || "").toLowerCase().includes(search.toLowerCase());
@@ -73,13 +74,13 @@ export function AdminProductManagement() {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-    // ── Select ─────────────────────────────────────────────
+    // Select
     const toggleAll = () =>
         setSelected(selected.length === paginated.length ? [] : paginated.map((p) => p.id));
     const toggleOne = (id) =>
         setSelected(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
 
-    // ── Open Modal ─────────────────────────────────────────
+    // Open Modal
     const openAdd = () => {
         setEdit(null);
         setForm(initForm);
@@ -108,13 +109,13 @@ export function AdminProductManagement() {
         setShowModal(true);
     };
 
-    // ── Form change ────────────────────────────────────────
+    // Form change
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
     };
 
-    // ── Save (Add / Edit) ──────────────────────────────────
+    // Save (Add / Edit)
     const handleSave = async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -142,7 +143,7 @@ export function AdminProductManagement() {
         }
     };
 
-    // ── Delete ─────────────────────────────────────────────
+    // Delete
     const handleDelete = async () => {
         if (!deleteId) return;
         setDeleting(true);
@@ -157,7 +158,7 @@ export function AdminProductManagement() {
         }
     };
 
-    // ── Stats ──────────────────────────────────────────────
+    // Stats
     const totalProducts = products.length;
     const inStock = products.filter((p) => p.stock_quantity > 0).length;
     const lowStock = products.filter((p) => p.stock_quantity <= 5 && p.stock_quantity > 0).length;
@@ -172,7 +173,7 @@ export function AdminProductManagement() {
 
     return (
         <AdminLayout>
-            {/* ── Topbar ── */}
+{ /* Topbar */ }
             <header style={{ background: "white", borderBottom: "1px solid #ebebeb", padding: "10px 24px", display: "flex", alignItems: "center", gap: 12, position: "sticky", top: 0, zIndex: 100 }}>
                 <nav style={{ fontSize: 13, color: "#888", display: "flex", alignItems: "center", gap: 6 }}>
                     <a href="/admin" style={{ color: "#888", textDecoration: "none" }}>Dashboard</a>
@@ -191,8 +192,7 @@ export function AdminProductManagement() {
                     </div>
                 </div>
             </header>
-
-            {/* ── Content ── */}
+{ /* Content */ }
             <div style={{ padding: "24px", flex: 1 }}>
 
                 {/* Page header */}
@@ -248,7 +248,7 @@ export function AdminProductManagement() {
                         </div>
                         <select value={category} onChange={e => { setCategory(e.target.value); setPage(1); }}
                             style={{ padding: "7px 12px", background: "white", border: "1px solid #ebebeb", borderRadius: 8, fontSize: 13, outline: "none", cursor: "pointer" }}>
-                            {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                            {categories.map(c => <option key={c}>{c}</option>)}
                         </select>
                         {selected.length > 0 && (
                             <span style={{ fontSize: 12, color: "#2563EB", fontWeight: 500 }}>
@@ -391,8 +391,7 @@ export function AdminProductManagement() {
                     )}
                 </div>
             </div>
-
-            {/* ── Add / Edit Modal ── */}
+{ /* Add / Edit Modal */ }
             {showModal && (
                 <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
                     <div style={{ background: "white", borderRadius: 14, width: "100%", maxWidth: 660, maxHeight: "90vh", overflow: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
@@ -512,8 +511,7 @@ export function AdminProductManagement() {
                     </div>
                 </div>
             )}
-
-            {/* ── Delete Confirm Modal ── */}
+{ /* Delete Confirm Modal */ }
             {deleteId && (
                 <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
                     <div style={{ background: "white", borderRadius: 14, width: "100%", maxWidth: 420, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>

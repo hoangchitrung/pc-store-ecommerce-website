@@ -1,22 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProducts } from "../api/productApi";
 
-// ── Static ─────────────────────────────────────────────────
-const CATEGORIES = [
-    { label: "Processors", icon: "bi-cpu", color: "#3b82f6", filter: "CPU" },
-    { label: "Graphics Cards", icon: "bi-gpu-card", color: "#8b5cf6", filter: "GPU" },
-    { label: "RAM & Memory", icon: "bi-memory", color: "#10b981", filter: "RAM" },
-    { label: "SSD Storage", icon: "bi-device-hdd", color: "#f59e0b", filter: "Storage" },
-    { label: "Motherboards", icon: "bi-motherboard", color: "#ef4444", filter: "Motherboard" },
-    { label: "PC Cases", icon: "bi-box", color: "#6366f1", filter: "Case" },
-];
-
-const BRANDS = ["NVIDIA", "AMD", "INTEL", "CORSAIR", "ASUS", "MSI", "GIGABYTE", "NZXT", "SAMSUNG", "LOGITECH"];
-
+// Helpers
 const pad = (n) => String(n).padStart(2, "0");
 
-// ── Countdown ──────────────────────────────────────────────
+const CATEGORY_META = {
+    CPU: { label: "Processors", icon: "bi-cpu", color: "#3b82f6" },
+    GPU: { label: "Graphics Cards", icon: "bi-gpu-card", color: "#8b5cf6" },
+    RAM: { label: "RAM & Memory", icon: "bi-memory", color: "#10b981" },
+    Storage: { label: "SSD Storage", icon: "bi-device-hdd", color: "#f59e0b" },
+    Motherboard: { label: "Motherboards", icon: "bi-motherboard", color: "#ef4444" },
+    Case: { label: "PC Cases", icon: "bi-box", color: "#6366f1" },
+};
+
+function deriveCategories(products) {
+    const categories = Array.from(new Set((products || []).map((p) => p.category).filter(Boolean)));
+    return categories.map((cat) => ({
+        label: CATEGORY_META[cat]?.label || cat,
+        icon: CATEGORY_META[cat]?.icon || "bi-tag",
+        color: CATEGORY_META[cat]?.color || "#2563EB",
+        filter: cat,
+    }));
+}
+
+function deriveBrands(products) {
+    return Array.from(new Set((products || []).map((p) => p.brand).filter(Boolean))).slice(0, 10);
+}
+
+// Countdown
 function useCountdown() {
     const [time, setTime] = useState({ h: 3, m: 0, s: 0 });
     useEffect(() => {
@@ -35,7 +47,7 @@ function useCountdown() {
     return time;
 }
 
-// ── Product Card ───────────────────────────────────────────
+// Product Card
 function ProductCard({ product, onClick }) {
     return (
         <div
@@ -74,7 +86,7 @@ function ProductCard({ product, onClick }) {
     );
 }
 
-// ── Loading Skeleton ───────────────────────────────────────
+// Loading Skeleton
 function SkeletonCard() {
     return (
         <div className="border rounded-2 p-2 bg-white" style={{ height: 220 }}>
@@ -86,7 +98,7 @@ function SkeletonCard() {
     );
 }
 
-// ── Main ───────────────────────────────────────────────────
+// Main
 export function HomePage() {
     const navigate = useNavigate();
     const countdown = useCountdown();
@@ -95,6 +107,9 @@ export function HomePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [activeCat, setActiveCat] = useState("All");
+
+    const categories = useMemo(() => deriveCategories(products), [products]);
+    const brands = useMemo(() => deriveBrands(products), [products]);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -122,7 +137,7 @@ export function HomePage() {
     return (
         <div style={{ fontFamily: "'Segoe UI', sans-serif", background: "#f5f5f5", minHeight: "100vh" }}>
 
-            {/* ── Hero ── */}
+            {/* Hero */}
             <div className="container py-3">
                 <div className="row g-3">
 
@@ -188,7 +203,7 @@ export function HomePage() {
                 </div>
             </div>
 
-            {/* ── Flash Sale ── */}
+            {/* Flash Sale */}
             <div className="container mb-4">
                 <div className="rounded-3 overflow-hidden border">
                     {/* Header */}
@@ -251,7 +266,7 @@ export function HomePage() {
                 </div>
             </div>
 
-            {/* ── Top Categories ── */}
+            {/* Top Categories */}
             <div className="container mb-4">
                 <div className="bg-white rounded-3 border p-3">
                     <div className="d-flex justify-content-between align-items-center mb-3">
@@ -262,16 +277,21 @@ export function HomePage() {
                         </span>
                     </div>
                     <div className="row row-cols-3 row-cols-md-6 g-2">
-                        {CATEGORIES.map((cat) => (
+                        {(categories.length > 0 ? categories : [{ label: "No categories", icon: "bi-tag", color: "#94a3b8", filter: "" }]).map((cat) => (
                             <div key={cat.label} className="col">
                                 <div className="text-center border rounded-2 py-3 px-2"
-                                    style={{ cursor: "pointer", transition: "all 0.15s" }}
-                                    onClick={() => navigate("/products")}
-                                    onMouseEnter={e => { e.currentTarget.style.borderColor = cat.color; e.currentTarget.style.background = cat.color + "08"; }}
+                                    style={{ cursor: cat.filter ? "pointer" : "default", transition: "all 0.15s" }}
+                                    onClick={() => cat.filter && navigate(`/products?category=${encodeURIComponent(cat.filter)}`)}
+                                    onMouseEnter={e => {
+                                        if (cat.color) {
+                                            e.currentTarget.style.borderColor = cat.color;
+                                            e.currentTarget.style.background = cat.color + "08";
+                                        }
+                                    }}
                                     onMouseLeave={e => { e.currentTarget.style.borderColor = ""; e.currentTarget.style.background = ""; }}>
                                     <div className="d-flex align-items-center justify-content-center rounded-2 mx-auto mb-2"
-                                        style={{ width: 52, height: 52, background: cat.color + "15" }}>
-                                        <i className={`bi ${cat.icon}`} style={{ fontSize: 24, color: cat.color }} />
+                                        style={{ width: 52, height: 52, background: cat.color ? cat.color + "15" : "#f0f0f0" }}>
+                                        <i className={`bi ${cat.icon}`} style={{ fontSize: 24, color: cat.color || "#64748b" }} />
                                     </div>
                                     <div style={{ fontSize: 12, fontWeight: 500, color: "#333" }}>{cat.label}</div>
                                 </div>
@@ -281,7 +301,7 @@ export function HomePage() {
                 </div>
             </div>
 
-            {/* ── Featured Products ── */}
+            {/* Featured Products */}
             <div className="container mb-4">
                 <div className="bg-white rounded-3 border p-3">
                     <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
@@ -291,7 +311,7 @@ export function HomePage() {
                         </h6>
                         {/* Filter tabs */}
                         <div className="d-flex gap-1 flex-wrap">
-                            {["All", "CPU", "GPU", "RAM", "Storage", "Case"].map((cat) => (
+                            {["All", ...categories.map((c) => c.filter)].filter(Boolean).slice(0, 8).map((cat) => (
                                 <button key={cat} onClick={() => setActiveCat(cat)}
                                     className="btn btn-sm px-3 rounded-pill"
                                     style={{
@@ -327,7 +347,7 @@ export function HomePage() {
                 </div>
             </div>
 
-            {/* ── New Arrivals ── */}
+            {/* New Arrivals */}
             <div className="container mb-4">
                 <div className="bg-white rounded-3 border p-3">
                     <div className="d-flex justify-content-between align-items-center mb-3">
@@ -356,24 +376,26 @@ export function HomePage() {
                 </div>
             </div>
 
-            {/* ── Brand Bar ── */}
+            {/* Brand Bar */}
             <div className="container mb-4">
                 <div className="bg-white rounded-3 border p-4 text-center">
                     <p className="text-muted mb-3" style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase" }}>
                         Authorized Retailer For
                     </p>
                     <div className="d-flex flex-wrap justify-content-center align-items-center gap-4">
-                        {BRANDS.map((b) => (
+                        {(brands.length > 0 ? brands : ["No brand data"]).map((b) => (
                             <span key={b} className="fw-bold text-muted"
                                 style={{ fontSize: 14, letterSpacing: "0.05em", cursor: "pointer", transition: "color 0.15s" }}
-                                onMouseEnter={e => e.target.style.color = "#2563EB"}
-                                onMouseLeave={e => e.target.style.color = ""}>{b}</span>
+                                onMouseEnter={(e) => e.target.style.color = "#2563EB"}
+                                onMouseLeave={(e) => e.target.style.color = ""}>
+                                {b}
+                            </span>
                         ))}
                     </div>
                 </div>
             </div>
 
-            {/* ── Footer ── */}
+            {/* Footer */}
             <footer className="bg-white border-top pt-5 pb-3">
                 <div className="container">
                     <div className="row g-4 mb-4">
@@ -428,7 +450,7 @@ export function HomePage() {
                 </div>
             </footer>
 
-            {/* ── Pulse animation ── */}
+            {/* Pulse animation */}
             <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 1; }

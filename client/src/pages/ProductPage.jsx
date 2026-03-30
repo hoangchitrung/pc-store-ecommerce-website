@@ -5,20 +5,17 @@ export function ProductPage() {
 
     return (
         <div style={{ fontFamily: "'Segoe UI', sans-serif", background: "#f5f5f5", minHeight: "100vh" }}>
-
-            {/* ── Flash Banner ── */}
+{ /* Flash Banner */ }
             <div
                 className="text-white text-center py-2 fw-semibold"
                 style={{ background: "#e53e3e", fontSize: 13, letterSpacing: "0.02em" }}
             >
                 FLASH SALE: UP TO 50% OFF ON SELECTED MOTHERBOARDS — ENDS IN 2 HOURS
             </div>
-
-            {/* ── Main Layout ── */}
+{ /* Main Layout */ }
             <div className="container-fluid py-3 px-3 px-md-4">
                 <div className="row g-3">
-
-                    {/* ── Content ── */}
+{ /* Content */ }
                     <div className="col-12">
 
                         {/* Breadcrumb */}

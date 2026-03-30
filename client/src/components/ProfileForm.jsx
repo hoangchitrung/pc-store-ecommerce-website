@@ -8,7 +8,7 @@ function ProfileForm() {
         bio: ""
     });
 
-    // 🔥 GET user
+    // GET user
     useEffect(() => {
         fetch("http://localhost:5000/api/users/1")
             .then(res => res.json())
@@ -23,7 +23,7 @@ function ProfileForm() {
         });
     };
 
-    // 🔥 UPDATE user
+    // UPDATE user
     const handleSubmit = () => {
         fetch("http://localhost:5000/api/users/1", {
             method: "PUT",
