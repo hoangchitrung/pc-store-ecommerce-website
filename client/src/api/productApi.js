@@ -7,9 +7,11 @@ const productApi = axios.create({
 });
 
 // 2. Đổi tên hàm thành getProducts để đúng với import ở HomePage.jsx
-export async function getProducts() {
+export async function getProducts(category = "") {
     try {
-        const response = await productApi.get("/");
+        const response = await productApi.get("/", {
+            params: category ? { category } : {},
+        });
         return response.data;
     } catch (error) {
         throw new Error(error?.response?.data?.message || error?.message || "Cannot fetch products");

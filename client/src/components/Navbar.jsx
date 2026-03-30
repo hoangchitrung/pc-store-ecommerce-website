@@ -12,7 +12,7 @@ function AuthButtons() {
             if (raw) {
                 try {
                     setUser(JSON.parse(raw));
-                } catch (e) {
+                } catch {
                     setUser(null);
                 }
             } else {
@@ -96,79 +96,50 @@ export function Navbar() {
 
                         <ul className="dropdown-menu align-item-center" aria-labelledby="categoryDropdown">
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        CPU
-                                    </span>
-                                </a>
+                                <Link to="/products" className="dropdown-item fw-semibold">Tất cả</Link>
                             </li>
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        GPU
-                                    </span>
-                                </a>
+                                <Link to="/products?category=CPU" className="dropdown-item fw-semibold">CPU</Link>
                             </li>
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        RAM
-                                    </span>
-                                </a>
+                                <Link to="/products?category=GPU" className="dropdown-item fw-semibold">GPU</Link>
                             </li>
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        Mainboard
-                                    </span>
-                                </a>
+                                <Link to="/products?category=RAM" className="dropdown-item fw-semibold">RAM</Link>
                             </li>
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        SSD/HDD
-                                    </span>
-                                </a>
+                                <Link to="/products?category=Motherboard" className="dropdown-item fw-semibold">Mainboard</Link>
                             </li>
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        Monitors
-                                    </span>
-                                </a>
+                                <Link to="/products?category=SSD/HDD" className="dropdown-item fw-semibold">SSD/HDD</Link>
                             </li>
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        Cases
-                                    </span>
-                                </a>
+                                <Link to="/products?category=Monitors" className="dropdown-item fw-semibold">Monitors</Link>
                             </li>
                             <li>
-                                <a href="#" className="dropdown-item">
-                                    <span className="fw-semibold">
-                                        Cooling
-                                    </span>
-                                </a>
+                                <Link to="/products?category=Cases" className="dropdown-item fw-semibold">Cases</Link>
+                            </li>
+                            <li>
+                                <Link to="/products?category=Cooling" className="dropdown-item fw-semibold">Cooling</Link>
                             </li>
                         </ul>
                     </div>
 
-                    <a href="#" className="text-decoration-none text-dark px-2">CPU</a>
+                    <Link to="/products?category=CPU" className="text-decoration-none text-dark px-2">CPU</Link>
                     <span className="text-muted">|</span>
-                    <a href="#" className="text-decoration-none text-dark px-2">GPU</a>
+                    <Link to="/products?category=GPU" className="text-decoration-none text-dark px-2">GPU</Link>
                     <span className="text-muted">|</span>
-                    <a href="#" className="text-decoration-none text-dark px-2">RAM</a>
+                    <Link to="/products?category=RAM" className="text-decoration-none text-dark px-2">RAM</Link>
                     <span className="text-muted">|</span>
-                    <a href="#" className="text-decoration-none text-dark px-2">Mainboard</a>
+                    <Link to="/products?category=Motherboard" className="text-decoration-none text-dark px-2">Mainboard</Link>
                     <span className="text-muted">|</span>
-                    <a href="#" className="text-decoration-none text-dark px-2">SSD/HDD</a>
+                    <Link to="/products?category=SSD/HDD" className="text-decoration-none text-dark px-2">SSD/HDD</Link>
                     <span className="text-muted">|</span>
-                    <a href="#" className="text-decoration-none text-dark px-2">Monitors</a>
+                    <Link to="/products?category=Monitors" className="text-decoration-none text-dark px-2">Monitors</Link>
                     <span className="text-muted">|</span>
-                    <a href="#" className="text-decoration-none text-dark px-2">Cases</a>
+                    <Link to="/products?category=Cases" className="text-decoration-none text-dark px-2">Cases</Link>
                     <span className="text-muted">|</span>
-                    <a href="#" className="text-decoration-none text-dark px-2">Cooling</a>
+                    <Link to="/products?category=Cooling" className="text-decoration-none text-dark px-2">Cooling</Link>
                 </div>
             </div>
         </nav>
