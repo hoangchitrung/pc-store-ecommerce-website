@@ -1,14 +1,11 @@
 const express = require("express");
-const router  = express.Router();
-const orderController = require("../controllers/orderController");
-const authMiddleware  = require("../middlewares/authMiddleware");
+const router = express.Router();
 
-// All order routes require authentication
-router.use(authMiddleware);
+// Lấy 2 hàm xử lý đơn hàng từ controller vào
+const { getAllOrders, updateOrderStatus } = require("../controllers/orderController");
 
-router.get("/",          orderController.getAllOrders);
-router.get("/:id",       orderController.getOrderById);
-router.put("/:id/status", orderController.updateOrderStatus);
-router.put("/:id/cancel", orderController.cancelOrder);
+// Mở cửa cho React gọi
+router.get("/", getAllOrders);
+router.put("/:orderCode/status", updateOrderStatus);
 
 module.exports = router;

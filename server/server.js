@@ -12,7 +12,7 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = 5000;
-
+app.use("/api/orders", require("./routes/orderRoutes"));
 app.use(express.json());
 app.use(cors({
     origin: "http://localhost:5173",
