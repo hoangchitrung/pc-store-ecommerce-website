@@ -45,16 +45,16 @@ function AppContent() {
 
     // Ẩn thanh Navbar ở các trang đăng nhập/đăng ký
     const hideNavbar = pathname === "/signup" || pathname === "/signin";
-    
+
     // Tính tổng số lượng item để hiển thị lên icon giỏ hàng
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <div className="bg-light min-vh-100">
             {!hideNavbar && <Navbar cartCount={totalItems} />}
-            
+
             <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<HomePage onAdd={onAdd} />} />
                 <Route path="/products" element={<ProductPage onAdd={onAdd} />} />
                 <Route path="/carts" element={<CartPage cart={cart} setCart={setCart} />} />
                 <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
