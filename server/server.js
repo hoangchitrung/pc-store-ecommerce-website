@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -9,26 +8,25 @@ const PORT = 5000;
 
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173", // local vite server
-    credentials: true
+    origin: "http://localhost:5173",
+    credentials: true,
 }));
 app.use(cookieParser());
 
-// PRODUCT ROUTES
+// ── Routes ──────────────────────────────────────────────────
 const productRoutes = require("./routes/productRoutes");
 app.use("/api/products", productRoutes);
 
-// USER ROUTES
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/v1/users", userRoutes);
 
-// AUTH ROUTES
 const authRoutes = require("./routes/authRoutes");
 app.use("/api/v1/auth", authRoutes);
-// ORDER ROUTES
-const orderRoutes = require("./routes/Orderroutes");
+
+const orderRoutes = require("./routes/orderRoutes");
 app.use("/api/orders", orderRoutes);
-// SERVER
+
+// ── Start ────────────────────────────────────────────────────
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });

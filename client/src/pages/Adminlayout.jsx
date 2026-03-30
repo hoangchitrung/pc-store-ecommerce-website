@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { label: "Products",  icon: "bi-box-seam",       path: "/admin/product"  },
   { label: "Inventory", icon: "bi-clipboard-data", path: "/admin/inventory"},
   { label: "Customers", icon: "bi-people",         path: "/admin/customers"},
+  
 ];
 
 const SYS_ITEMS = [

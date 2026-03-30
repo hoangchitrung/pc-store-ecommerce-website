@@ -7,10 +7,12 @@ import { ProductPage } from "./pages/ProductPage.jsx";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
 
 import { AdminPage } from "./pages/AdminPage.jsx";
-import { AdminOrderPage } from "./pages/AdminOrder.jsx";
 import { AdminProductManagement } from "./pages/AdminProductManagement.jsx";
 import { AdminInventory } from "./pages/AdminInventory.jsx";
 import AdminCustomerManagementPage from "./pages/AdminCustomerManagement.jsx";
+
+/* FIX: dùng named import */
+import { AdminOrderPage } from "./pages/AdminOrder.jsx";
 
 import { SignUpPage } from "./pages/SignUpPage.jsx";
 import { SignInPage } from "./pages/SignInPage.jsx";
@@ -29,6 +31,7 @@ function AppContent() {
   return (
     <>
       <Routes>
+
         {/* Public */}
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductPage />} />
@@ -60,15 +63,6 @@ function AppContent() {
 
         {/* Admin pages */}
         <Route
-          path="/admin/orders"
-          element={
-            <ProtectedRoute adminOnly={true}>
-              <AdminOrderPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
           path="/admin/product"
           element={
             <ProtectedRoute adminOnly={true}>
@@ -94,6 +88,16 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/admin/orders"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminOrderPage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </>
   );

@@ -1,135 +1,102 @@
 const connection = require("../config/db");
-const util = require("util");
 
-const query = util.promisify(connection.query).bind(connection);
+function getUserSelectExpr(callback) {
+    const sql = `
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'users'
+    `;
 
-// Cache schema để khỏi gọi SHOW COLUMNS quá nhiều lần
-let schemaCache = {
-    users: null,
-    products: null
-};
+    connection.query(sql, (err, rows) => {
+        if (err) return callback(err);
 
-async function getTableColumns(tableName) {
-    if (schemaCache[tableName]) {
-        return schemaCache[tableName];
-    }
+        const cols = new Set(rows.map(r => r.COLUMN_NAME));
 
-    const rows = await query(`SHOW COLUMNS FROM \`${tableName}\``);
-    const columns = rows.map(row => row.Field);
-    schemaCache[tableName] = columns;
-    return columns;
-}
+        let customerNameExpr = "NULL";
+        if (cols.has("full_name")) {
+            customerNameExpr = "u.full_name";
+        } else if (cols.has("name")) {
+            customerNameExpr = "u.name";
+        } else if (cols.has("username")) {
+            customerNameExpr = "u.username";
+        } else if (cols.has("customer_name")) {
+            customerNameExpr = "u.customer_name";
+        } else if (cols.has("first_name") && cols.has("last_name")) {
+            customerNameExpr = "CONCAT(u.first_name, ' ', u.last_name)";
+        }
 
-function pickFirstExisting(columns, candidates) {
-    return candidates.find(col => columns.includes(col)) || null;
-}
+        const customerEmailExpr = cols.has("email") ? "u.email" : "NULL";
+        const customerPhoneExpr =
+            cols.has("phone_number") ? "u.phone_number" :
+            cols.has("phone") ? "u.phone" :
+            cols.has("mobile") ? "u.mobile" :
+            "NULL";
 
-function buildCustomerSelect(userCols) {
-    const nameCol = pickFirstExisting(userCols, ["full_name", "name", "username"]);
-    const emailCol = pickFirstExisting(userCols, ["email"]);
-    const phoneCol = pickFirstExisting(userCols, ["phone_number", "phone", "phone_no"]);
-
-    return {
-        nameSelect: nameCol ? `u.\`${nameCol}\` AS customer_name` : `NULL AS customer_name`,
-        emailSelect: emailCol ? `u.\`${emailCol}\` AS customer_email` : `NULL AS customer_email`,
-        phoneSelect: phoneCol ? `u.\`${phoneCol}\` AS customer_phone` : `NULL AS customer_phone`
-    };
-}
-
-function buildProductSelect(productCols) {
-    const nameCol = pickFirstExisting(productCols, ["name", "product_name", "title"]);
-    const imageCol = pickFirstExisting(productCols, ["image_url", "image", "thumbnail", "photo"]);
-    const categoryCol = pickFirstExisting(productCols, ["category", "category_name", "type"]);
-
-    return {
-        nameSelect: nameCol ? `p.\`${nameCol}\` AS product_name` : `NULL AS product_name`,
-        imageSelect: imageCol ? `p.\`${imageCol}\` AS product_image` : `NULL AS product_image`,
-        categorySelect: categoryCol ? `p.\`${categoryCol}\` AS product_category` : `NULL AS product_category`
-    };
+        callback(null, {
+            customerNameExpr,
+            customerEmailExpr,
+            customerPhoneExpr
+        });
+    });
 }
 
 // GET all orders
-exports.getAllOrders = async (req, res) => {
-    try {
-        const { status, search } = req.query;
+exports.getAllOrders = (req, res) => {
+    getUserSelectExpr((err, userCols) => {
+        if (err) {
+            return res.status(500).json({ message: `Database Error: ${err.message}` });
+        }
 
-        const userCols = await getTableColumns("users");
-        const customerSelect = buildCustomerSelect(userCols);
-
-        let sql = `
+        const sql = `
             SELECT 
                 o.id,
                 o.order_number,
-                o.status,
                 o.total_amount,
-                o.payment_method,
-                o.payment_status,
-                o.shipping_address,
-                o.created_at,
-                o.updated_at,
-                ${customerSelect.nameSelect},
-                ${customerSelect.emailSelect}
-            FROM orders o
-            LEFT JOIN users u ON o.user_id = u.id
-        `;
-
-        const conditions = [];
-        const params = [];
-
-        if (status) {
-            conditions.push("o.status = ?");
-            params.push(status);
-        }
-
-        if (search) {
-            conditions.push("(o.order_number LIKE ? OR o.shipping_address LIKE ?)");
-            params.push(`%${search}%`, `%${search}%`);
-        }
-
-        if (conditions.length > 0) {
-            sql += " WHERE " + conditions.join(" AND ");
-        }
-
-        sql += " ORDER BY o.created_at DESC";
-
-        const results = await query(sql, params);
-        return res.status(200).json(results);
-    } catch (err) {
-        console.error("getAllOrders SQL error:", err.sqlMessage || err.message);
-        console.error("SQL:", err.sql);
-        return res.status(500).json({
-            message: "Database Error",
-            error: err.sqlMessage || err.message
-        });
-    }
-};
-
-// GET order by id
-exports.getOrderById = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const userCols = await getTableColumns("users");
-        const productCols = await getTableColumns("products");
-
-        const customerSelect = buildCustomerSelect(userCols);
-        const productSelect = buildProductSelect(productCols);
-
-        const orderSql = `
-            SELECT 
-                o.id,
-                o.order_number,
                 o.status,
-                o.total_amount,
                 o.payment_method,
                 o.payment_status,
                 o.shipping_address,
                 o.notes,
                 o.created_at,
-                o.updated_at,
-                ${customerSelect.nameSelect},
-                ${customerSelect.emailSelect},
-                ${customerSelect.phoneSelect}
+                ${userCols.customerNameExpr} AS customer_name,
+                ${userCols.customerEmailExpr} AS customer_email,
+                ${userCols.customerPhoneExpr} AS customer_phone
+            FROM orders o
+            LEFT JOIN users u ON o.user_id = u.id
+            ORDER BY o.created_at DESC;
+        `;
+
+        connection.query(sql, (err2, results) => {
+            if (err2) return res.status(500).json({ message: `Database Error: ${err2.message}` });
+            return res.status(200).json(results);
+        });
+    });
+};
+
+// GET order by id with items
+exports.getOrderById = (req, res) => {
+    const { id } = req.params;
+
+    getUserSelectExpr((err, userCols) => {
+        if (err) {
+            return res.status(500).json({ message: `Database Error: ${err.message}` });
+        }
+
+        const orderSql = `
+            SELECT 
+                o.id,
+                o.order_number,
+                o.total_amount,
+                o.status,
+                o.payment_method,
+                o.payment_status,
+                o.shipping_address,
+                o.notes,
+                o.created_at,
+                ${userCols.customerNameExpr} AS customer_name,
+                ${userCols.customerEmailExpr} AS customer_email,
+                ${userCols.customerPhoneExpr} AS customer_phone
             FROM orders o
             LEFT JOIN users u ON o.user_id = u.id
             WHERE o.id = ?;
@@ -139,128 +106,59 @@ exports.getOrderById = async (req, res) => {
             SELECT 
                 oi.id,
                 oi.quantity,
-                oi.price,
-                ${productSelect.nameSelect},
-                ${productSelect.imageSelect},
-                ${productSelect.categorySelect}
+                oi.unit_price,
+                oi.subtotal,
+                p.name      AS product_name,
+                p.image_url AS product_image,
+                p.category  AS product_category,
+                p.brand     AS product_brand
             FROM order_items oi
             LEFT JOIN products p ON oi.product_id = p.id
             WHERE oi.order_id = ?;
         `;
 
-        const orders = await query(orderSql, [id]);
+        connection.query(orderSql, [id], (err2, orders) => {
+            if (err2) return res.status(500).json({ message: `Database Error: ${err2.message}` });
+            if (orders.length === 0) return res.status(404).json({ message: "Order not found" });
 
-        if (!orders || orders.length === 0) {
-            return res.status(404).json({ message: "Order not found" });
-        }
-
-        const items = await query(itemsSql, [id]);
-
-        return res.status(200).json({
-            ...orders[0],
-            items
+            connection.query(itemsSql, [id], (err3, items) => {
+                if (err3) return res.status(500).json({ message: `Database Error: ${err3.message}` });
+                return res.status(200).json({ ...orders[0], items });
+            });
         });
-    } catch (err) {
-        console.error("getOrderById SQL error:", err.sqlMessage || err.message);
-        console.error("SQL:", err.sql);
-        return res.status(500).json({
-            message: "Database Error",
-            error: err.sqlMessage || err.message
-        });
-    }
+    });
 };
 
 // PUT update order status
-exports.updateOrderStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { status } = req.body;
+exports.updateOrderStatus = (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
 
-        const allowedStatus = ["pending", "processing", "shipped", "delivered", "cancelled"];
-
-        if (!status) {
-            return res.status(400).json({ message: "Status is required" });
-        }
-
-        if (!allowedStatus.includes(status)) {
-            return res.status(400).json({
-                message: `Invalid status. Must be one of: ${allowedStatus.join(", ")}`
-            });
-        }
-
-        const rows = await query("SELECT id, status FROM orders WHERE id = ?", [id]);
-
-        if (!rows || rows.length === 0) {
-            return res.status(404).json({ message: "Order not found" });
-        }
-
-        const currentStatus = rows[0].status;
-
-        if (currentStatus === "delivered" || currentStatus === "cancelled") {
-            return res.status(400).json({
-                message: "Cannot update completed or cancelled order"
-            });
-        }
-
-        await query(
-            `
-            UPDATE orders
-            SET status = ?, updated_at = NOW()
-            WHERE id = ?
-            `,
-            [status, id]
-        );
-
-        return res.status(200).json({
-            message: "Order status updated successfully"
-        });
-    } catch (err) {
-        console.error("updateOrderStatus SQL error:", err.sqlMessage || err.message);
-        console.error("SQL:", err.sql);
-        return res.status(500).json({
-            message: "Database Error",
-            error: err.sqlMessage || err.message
-        });
+    const allowed = ["pending", "processing", "delivered", "cancelled"];
+    if (!allowed.includes(status?.toLowerCase())) {
+        return res.status(400).json({ message: `Invalid status. Must be one of: ${allowed.join(", ")}` });
     }
+
+    const sql = "UPDATE orders SET status = ? WHERE id = ?;";
+    connection.query(sql, [status, id], (err, result) => {
+        if (err) return res.status(500).json({ message: `Database Error: ${err.message}` });
+        if (result.affectedRows === 0) return res.status(404).json({ message: "Order not found" });
+        return res.status(200).json({ message: "Order status updated" });
+    });
 };
 
 // PUT cancel order
-exports.cancelOrder = async (req, res) => {
-    try {
-        const { id } = req.params;
+exports.cancelOrder = (req, res) => {
+    const { id } = req.params;
+    const sql = `
+        UPDATE orders 
+        SET status = 'cancelled' 
+        WHERE id = ? AND status NOT IN ('delivered', 'cancelled');
+    `;
 
-        const rows = await query("SELECT id, status FROM orders WHERE id = ?", [id]);
-
-        if (!rows || rows.length === 0) {
-            return res.status(404).json({ message: "Order not found" });
-        }
-
-        const currentStatus = rows[0].status;
-
-        if (currentStatus === "delivered" || currentStatus === "cancelled") {
-            return res.status(400).json({
-                message: "Cannot cancel this order"
-            });
-        }
-
-        await query(
-            `
-            UPDATE orders
-            SET status = 'cancelled', updated_at = NOW()
-            WHERE id = ?
-            `,
-            [id]
-        );
-
-        return res.status(200).json({
-            message: "Order cancelled successfully"
-        });
-    } catch (err) {
-        console.error("cancelOrder SQL error:", err.sqlMessage || err.message);
-        console.error("SQL:", err.sql);
-        return res.status(500).json({
-            message: "Database Error",
-            error: err.sqlMessage || err.message
-        });
-    }
+    connection.query(sql, [id], (err, result) => {
+        if (err) return res.status(500).json({ message: `Database Error: ${err.message}` });
+        if (result.affectedRows === 0) return res.status(400).json({ message: "Cannot cancel this order" });
+        return res.status(200).json({ message: "Order cancelled" });
+    });
 };
