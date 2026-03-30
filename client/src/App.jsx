@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -10,6 +8,7 @@ import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
 import { AdminPage } from "./pages/AdminPage.jsx";
 import { SignUpPage } from "./pages/SignUpPage.jsx";
 import { SignInPage } from "./pages/SignInPage.jsx";
+import { Navbar } from "./components/Navbar.jsx";
 
 function AppContent() {
   const { pathname } = useLocation();

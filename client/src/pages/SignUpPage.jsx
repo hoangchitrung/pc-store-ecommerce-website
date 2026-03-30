@@ -43,7 +43,6 @@ export function SignUpPage() {
     };
 
     return (
-<<<<<<< HEAD
         <div className="container d-flex align-items-center justify-content-center min-vh-100 bg-light">
             <div className="card shadow-lg p-4" style={{ maxWidth: 400, width: '100%' }}>
                 <form className="" onSubmit={onSubmit} autoComplete="off">
@@ -76,74 +75,6 @@ export function SignUpPage() {
                         <Link to="/signin" className="fw-semibold text-decoration-none">Sign In</Link>
                     </div>
                 </form>
-=======
-        <div className="container d-flex justify-content-center align-items-center vh-100">
-            <div className="card shadow p-4" style={{ width: "400px" }}>
-                <h3 className="text-center mb-3">Create Account</h3>
-
-                <form onSubmit={onSubmit}>
-                    {/* Full Name */}
-                    <div className="mb-3">
-                        <label className="form-label">Full Name</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="fullName"
-                            value={form.fullName}
-                            onChange={onChange}
-                            required
-                        />
-                    </div>
-
-                    {/* Email */}
-                    <div className="mb-3">
-                        <label className="form-label">Email</label>
-                        <input
-                            type="email"
-                            className="form-control"
-                            name="email"
-                            value={form.email}
-                            onChange={onChange}
-                            required
-                        />
-                    </div>
-
-                    {/* Password */}
-                    <div className="mb-3">
-                        <label className="form-label">Password</label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            name="password"
-                            value={form.password}
-                            onChange={onChange}
-                            required
-                        />
-                    </div>
-
-                    {/* Error / Success */}
-                    {error && (
-                        <div className="alert alert-danger p-2">{error}</div>
-                    )}
-                    {success && (
-                        <div className="alert alert-success p-2">{success}</div>
-                    )}
-
-                    {/* Button */}
-                    <button
-                        type="submit"
-                        className="btn btn-primary w-100"
-                        disabled={loading}
-                    >
-                        {loading ? "Signing up..." : "Sign Up"}
-                    </button>
-                </form>
-
-                <p className="text-center mt-3 mb-0">
-                    Already have an account?{" "}
-                    <Link to="/signin">Sign In</Link>
-                </p>
->>>>>>> origin/Hao
             </div>
         </div>
     );
