@@ -24,10 +24,6 @@ function deriveCategories(products) {
     }));
 }
 
-function deriveBrands(products) {
-    return Array.from(new Set((products || []).map((p) => p.brand).filter(Boolean))).slice(0, 10);
-}
-
 // Countdown
 function useCountdown() {
     const [time, setTime] = useState({ h: 3, m: 0, s: 0 });
@@ -109,7 +105,6 @@ export function HomePage() {
     const [activeCat, setActiveCat] = useState("All");
 
     const categories = useMemo(() => deriveCategories(products), [products]);
-    const brands = useMemo(() => deriveBrands(products), [products]);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -376,24 +371,6 @@ export function HomePage() {
                 </div>
             </div>
 
-            {/* Brand Bar */}
-            <div className="container mb-4">
-                <div className="bg-white rounded-3 border p-4 text-center">
-                    <p className="text-muted mb-3" style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                        Authorized Retailer For
-                    </p>
-                    <div className="d-flex flex-wrap justify-content-center align-items-center gap-4">
-                        {(brands.length > 0 ? brands : ["No brand data"]).map((b) => (
-                            <span key={b} className="fw-bold text-muted"
-                                style={{ fontSize: 14, letterSpacing: "0.05em", cursor: "pointer", transition: "color 0.15s" }}
-                                onMouseEnter={(e) => e.target.style.color = "#2563EB"}
-                                onMouseLeave={(e) => e.target.style.color = ""}>
-                                {b}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-            </div>
 
             {/* Footer */}
             <footer className="bg-white border-top pt-5 pb-3">
