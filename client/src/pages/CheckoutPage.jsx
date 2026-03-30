@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export function CheckoutPage({ cart }) {
-    const navigate = useNavigate();
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     const formatVND = (value) => {

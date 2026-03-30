@@ -10,7 +10,7 @@ export function CheckoutCancelPage() {
     useEffect(() => {
         if (orderCode) {
             axios.put(`http://localhost:5000/api/payment/cancel/${orderCode}`)
-                .then(res => console.log("✅ Đã báo Backend hủy đơn thành công!"))
+                .then(() => console.log("✅ Đã báo Backend hủy đơn thành công!"))
                 .catch(err => console.error("❌ Lỗi khi báo hủy đơn:", err));
         }
     }, [orderCode]);

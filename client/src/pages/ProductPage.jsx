@@ -15,6 +15,7 @@ export function ProductPage() {
     const [searchParams] = useSearchParams();
 
     const category = searchParams.get("category") || "";
+    const query = searchParams.get("search") || "";
 
     useEffect(() => {
         let active = true;
@@ -50,6 +51,17 @@ export function ProductPage() {
         return copy;
     }, [products, sortBy]);
 
+    const filteredProducts = useMemo(() => {
+        if (!query) return sortedProducts;
+        const q = query.toLowerCase();
+        return sortedProducts.filter((p) =>
+            String(p.name || "").toLowerCase().includes(q) ||
+            String(p.category || "").toLowerCase().includes(q) ||
+            String(p.brand || "").toLowerCase().includes(q) ||
+            String(p.description || "").toLowerCase().includes(q)
+        );
+    }, [sortedProducts, query]);
+
     return (
         <div style={{ fontFamily: "'Segoe UI', sans-serif", background: "#f5f5f5", minHeight: "100vh" }}>
             <div
@@ -72,9 +84,17 @@ export function ProductPage() {
                         <div className="d-flex align-items-start justify-content-between mb-3 flex-wrap gap-2">
                             <div>
                                 <h4 className="fw-bold mb-1" style={{ fontSize: 22 }}>PC Components</h4>
-                                <p className="text-muted mb-0" style={{ fontSize: 13 }}>
-                                    Build your dream PC with our wide selection of parts.
-                                </p>
+                                {category || query ? (
+                                    <p className="text-muted mb-0" style={{ fontSize: 13 }}>
+                                        {category ? `Category: ${category}` : ""}
+                                        {category && query ? " • " : ""}
+                                        {query ? `Search: ${query}` : ""}
+                                    </p>
+                                ) : (
+                                    <p className="text-muted mb-0" style={{ fontSize: 13 }}>
+                                        Build your dream PC with our wide selection of parts.
+                                    </p>
+                                )}
                             </div>
 
                             <div className="d-flex align-items-center gap-2">
@@ -103,13 +123,15 @@ export function ProductPage() {
                             <div className="alert alert-danger">{error}</div>
                         )}
 
-                        {!loading && !error && sortedProducts.length === 0 && (
-                            <div className="alert alert-info">Không tìm thấy sản phẩm cho danh mục {category || "tất cả"}.</div>
+                        {!loading && !error && filteredProducts.length === 0 && (
+                            <div className="alert alert-info">
+                                Không tìm thấy sản phẩm {query ? `cho tìm kiếm "${query}"` : `cho danh mục ${category || "tất cả"}` }.
+                            </div>
                         )}
 
-                        {!loading && !error && sortedProducts.length > 0 && (
+                        {!loading && !error && filteredProducts.length > 0 && (
                             <div className="row g-3">
-                                {sortedProducts.map((product) => (
+                                {filteredProducts.map((product) => (
                                     <div key={product.id} className="col-12 col-md-6 col-lg-4">
                                         <div className="card h-100 shadow-sm">
                                             <img

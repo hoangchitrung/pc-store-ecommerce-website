@@ -38,6 +38,9 @@ export async function addProduct(payload) {
     }
 }
 
+// Alias để tương thích với nơi import createProduct
+export const createProduct = addProduct;
+
 // 5. Giữ lại hàm update của bạn bè cho trang Admin
 export async function updateProduct(id, payload) {
     try {

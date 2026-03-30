@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 exports.getCustomers = async (req, res) => {
     try {
-        const [rows] = await db.query(`
+        const [rows] = await db.promise().query(`
       SELECT 
         id,
         fullname,

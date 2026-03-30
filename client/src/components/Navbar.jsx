@@ -58,6 +58,22 @@ function AuthButtons() {
 }
 
 export function Navbar() {
+    const [searchText, setSearchText] = useState("");
+    const navigate = useNavigate();
+
+    const submitSearch = () => {
+        const query = searchText.trim();
+        if (!query) return;
+        navigate(`/products?search=${encodeURIComponent(query)}`);
+    };
+
+    const onKeyPress = (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            submitSearch();
+        }
+    };
+
     return (
         <nav className="d-flex flex-column navbar navbar-expand-lg navbar-light p-0 bg-white">
             <div className="container-fluid d-flex align-items-center justify-content-between py-2 border border-top-0 border-1">
@@ -68,8 +84,19 @@ export function Navbar() {
                     </a>
                 </span>
                 <div className="input-group w-50 mx-4">
-                    <input type="text" className="form-control border-primary border-3" placeholder="What are you looking for?..." />
-                    <span className="input-group-text bg-primary border-primary text-white" style={{ cursor: "pointer" }}>
+                    <input
+                        type="text"
+                        className="form-control border-primary border-3"
+                        placeholder="What are you looking for?..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={onKeyPress}
+                    />
+                    <span
+                        className="input-group-text bg-primary border-primary text-white"
+                        style={{ cursor: "pointer" }}
+                        onClick={submitSearch}
+                    >
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </span>
                 </div>

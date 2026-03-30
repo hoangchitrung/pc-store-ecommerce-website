@@ -12,7 +12,7 @@ export function ProtectedRoute({ children, adminOnly = false }) {
 
     try {
         user = JSON.parse(rawUser);
-    } catch (error) {
+    } catch {
         // dữ liệu lỗi → clear luôn
         localStorage.removeItem("user");
         return <Navigate to="/signin" />;

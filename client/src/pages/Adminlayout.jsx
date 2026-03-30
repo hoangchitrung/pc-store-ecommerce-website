@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NAV_ITEMS = [
     { label: "Dashboard", icon: "bi-grid-1x2-fill", path: "/admin" },
@@ -16,8 +16,16 @@ const SYS_ITEMS = [
 
 export function AdminLayout({ children }) {
     const { pathname } = useLocation();
+    const navigate = useNavigate();
     const isActive = (path) =>
         path === "/admin" ? pathname === "/admin" : pathname.startsWith(path);
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        window.dispatchEvent(new Event("authChange"));
+        navigate("/signin");
+    };
 
     return (
         <div style={{ display: "flex", height: "100vh", fontFamily: "'Segoe UI', sans-serif", background: "#f8f8f6", overflow: "hidden" }}>
@@ -69,13 +77,20 @@ export function AdminLayout({ children }) {
                 </nav>
 
                 {/* User */}
-                <div style={{ padding: "12px 10px", borderTop: "1px solid #ebebeb", display: "flex", alignItems: "center", gap: 9 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#eff6ff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#2563EB", flexShrink: 0 }}>AU</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: "#1a1a1a" }}>Admin User</div>
-                        <div style={{ fontSize: 11, color: "#aaa" }}>admin@techforge.com</div>
+                <div style={{ padding: "12px 10px", borderTop: "1px solid #ebebeb" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 8 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#eff6ff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#2563EB", flexShrink: 0 }}>AU</div>
+                        <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: 12, fontWeight: 600, color: "#1a1a1a" }}>Admin User</div>
+                            <div style={{ fontSize: 11, color: "#aaa" }}>admin@techforge.com</div>
+                        </div>
                     </div>
-                    <i className="bi bi-box-arrow-right" style={{ fontSize: 14, color: "#ccc", cursor: "pointer" }} />
+                    <button
+                        onClick={handleLogout}
+                        style={{ width: "100%", borderRadius: 8, border: "1px solid #ebebeb", background: "white", color: "#ef4444", padding: "8px 10px", fontWeight: 600, cursor: "pointer" }}
+                    >
+                        <i className="bi bi-box-arrow-right me-1" /> Logout
+                    </button>
                 </div>
             </aside>
 { /* Main content */ }
