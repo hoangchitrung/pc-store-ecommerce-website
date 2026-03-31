@@ -104,5 +104,3 @@ npm run dev
 - Thêm sản phẩm vào giỏ (`Add to cart`)
 - Mở giỏ (`/carts`) và tiến hành thanh toán (`/checkout`)
 - Tương tác chức năng cancel/success (`/checkout-cancel`, `/checkout-success`)
-
-```
