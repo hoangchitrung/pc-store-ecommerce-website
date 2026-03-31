@@ -124,7 +124,13 @@ export function ProductDetailsPage({ onAdd }) {
                     {/* Nút thêm vào giỏ */}
                     <button
                         className={`btn btn-lg w-100 py-3 fw-bold shadow-sm ${product.stock_quantity > 0 ? 'btn-danger' : 'btn-secondary'}`}
-                        onClick={() => onAdd(product)}
+                        onClick={() => {
+                            if (typeof onAdd === 'function') {
+                                onAdd(product);
+                            } else {
+                                console.warn('onAdd callback chưa được cung cấp cho ProductDetailsPage');
+                            }
+                        }}
                         disabled={product.stock_quantity <= 0}
                     >
                         {product.stock_quantity > 0 ? "THÊM VÀO GIỎ HÀNG" : "LIÊN HỆ ĐẶT HÀNG TRƯỚC"}

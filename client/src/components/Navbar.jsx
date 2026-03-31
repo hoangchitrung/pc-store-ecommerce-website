@@ -42,7 +42,7 @@ function AuthButtons() {
             <div className="d-flex gap-2 align-items-center">
                 <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none text-dark">
                     <i className="fa-solid fa-user fa-lg"></i>
-                    <span className="fw-semibold">{user.name}</span>
+                    <span className="fw-semibold">{user.fullName || user.name || user.email || "Người dùng"}</span>
                 </Link>
                 <button onClick={handleLogout} className="btn btn-outline-secondary btn-sm">Logout</button>
             </div>

@@ -25,6 +25,17 @@ function AppContent({ cart, setCart }) {
     const { pathname } = useLocation();
 
     const hideNavbar = pathname === "/signup" || pathname === "/signin" || pathname === "/admin";
+
+    const addToCart = (product) => {
+        setCart((prev) => {
+            const existing = prev.find((p) => p.id === product.id);
+            if (existing) {
+                return prev.map((p) => (p.id === product.id ? { ...p, quantity: (p.quantity || 1) + 1 } : p));
+            }
+            return [...prev, { ...product, quantity: 1 }];
+        });
+    };
+
     return (
         <>
             {!hideNavbar && <Navbar />}
@@ -47,11 +58,13 @@ function AppContent({ cart, setCart }) {
 
                 <Route path="/build" element={<BuildPCPage cart={cart} setCart={setCart} />}></Route>
 
-                <Route path="/products/:id" element={<ProductDetailsPage />}></Route>
+                <Route path="/products/:id" element={<ProductDetailsPage onAdd={addToCart} />}></Route>
 
                 <Route path="/checkout" element={<CheckoutPage cart={cart} />}></Route>
                 <Route path="/checkout/success" element={<CheckoutSuccessPage setCart={setCart} />}></Route>
                 <Route path="/checkout/cancel" element={<CheckoutCancelPage />}></Route>
+                <Route path="/checkout-success" element={<CheckoutSuccessPage setCart={setCart} />}></Route>
+                <Route path="/checkout-cancel" element={<CheckoutCancelPage />}></Route>
             </Routes>
         </>
     );
