@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // Format number as Vietnamese đồng (VNĐ)
 const formatVND = (value) => {
@@ -9,6 +9,16 @@ const formatVND = (value) => {
 
 export function CartPage({ cart = [], setCart }) {
     const safeCart = Array.isArray(cart) ? cart : [];
+    const [toastMessage, setToastMessage] = useState("");
+    const toastTimerRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (toastTimerRef.current) {
+                clearTimeout(toastTimerRef.current);
+            }
+        };
+    }, []);
 
     // 1. Hàm tăng số lượng (+)
     const handleIncrease = (product) => {
@@ -29,10 +39,13 @@ export function CartPage({ cart = [], setCart }) {
 
     // 3. Hàm xóa hẳn sản phẩm khỏi giỏ (Thùng rác)
     const handleRemove = (product) => {
-        if (window.confirm(`Bạn có chắc chắn muốn xóa ${product.name} khỏi giỏ hàng?`)) {
-            // Lọc và giữ lại những item có id KHÁC với id của sản phẩm vừa bấm xóa
-            setCart(safeCart.filter((item) => item.id !== product.id));
+        setCart(safeCart.filter((item) => item.id !== product.id));
+
+        setToastMessage(`Đã xóa ${product.name} khỏi giỏ hàng`);
+        if (toastTimerRef.current) {
+            clearTimeout(toastTimerRef.current);
         }
+        toastTimerRef.current = setTimeout(() => setToastMessage(""), 2200);
     };
 
     // Tính tổng tiền của toàn bộ giỏ hàng
@@ -55,6 +68,13 @@ export function CartPage({ cart = [], setCart }) {
     // Giao diện chính của Giỏ hàng
     return (
         <div className="container mt-5 mb-5">
+            {toastMessage && (
+                <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 1200 }}>
+                    <div className="alert alert-success py-2 px-3 shadow-sm mb-0" style={{ opacity: 0.95 }}>
+                        {toastMessage}
+                    </div>
+                </div>
+            )}
             <h2 className="fw-bold mb-4">Giỏ hàng của bạn</h2>
             <div className="row g-4">
 

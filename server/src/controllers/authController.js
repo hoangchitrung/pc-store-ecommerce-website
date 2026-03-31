@@ -67,7 +67,7 @@ exports.login = async (req, res) => {
             message: "Login successful",
             user: {
                 id: user.id,
-                fullName: user.full_name,
+                fullName: user.fullname || user.full_name || null,
                 email: user.email,
                 role: role ? role.toLowerCase() : null, // 🔥 FIX
             },
@@ -84,7 +84,7 @@ exports.me = async (req, res) => {
             user: {
                 id: req.user.sub,
                 email: req.user.email || null,
-                fullName: user?.full_name || null,
+                fullName: user?.fullname || user?.full_name || null,
                 role: (user?.user_type || user?.role || "user").toLowerCase(), // 🔥 FIX
             },
         });

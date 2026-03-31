@@ -7,6 +7,9 @@ import { HomePage } from "./pages/HomePage.jsx";
 import { ProductPage } from "./pages/ProductPage.jsx";
 import { BuildPCPage } from "./pages/BuildPCPage.jsx";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage.jsx";
+import { CheckoutPage } from "./pages/CheckoutPage.jsx";
+import { CheckoutSuccessPage } from "./pages/CheckoutSuccessPage.jsx";
+import { CheckoutCancelPage } from "./pages/CheckoutCancelPage.jsx";
 import { AdminPage } from "./pages/AdminPage.jsx";
 import { AdminOrderPage } from "./pages/AdminOrder.jsx";
 import { AdminProductManagement } from "./pages/AdminProductManagement.jsx";
@@ -28,7 +31,7 @@ function AppContent({ cart, setCart }) {
             {!hideNavbar && <ChatBubble />}
             <Routes>
                 <Route path="/" element={<HomePage />}></Route>
-                <Route path="/products" element={<ProductPage />}></Route>
+                <Route path="/products" element={<ProductPage setCart={setCart} />}></Route>
                 <Route path="/carts" element={<CartPage cart={cart} setCart={setCart} />}></Route>
 
                 <Route path="/signup" element={<SignUpPage />}></Route>
@@ -45,6 +48,10 @@ function AppContent({ cart, setCart }) {
                 <Route path="/build" element={<BuildPCPage cart={cart} setCart={setCart} />}></Route>
 
                 <Route path="/products/:id" element={<ProductDetailsPage />}></Route>
+
+                <Route path="/checkout" element={<CheckoutPage cart={cart} />}></Route>
+                <Route path="/checkout/success" element={<CheckoutSuccessPage setCart={setCart} />}></Route>
+                <Route path="/checkout/cancel" element={<CheckoutCancelPage />}></Route>
             </Routes>
         </>
     );

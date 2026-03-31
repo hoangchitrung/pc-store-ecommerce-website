@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { getMe } from "../api/authApi";
 
 export function CheckoutPage({ cart }) {
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -17,6 +18,47 @@ export function CheckoutPage({ cart }) {
         address: ""
     });
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const initUser = async () => {
+            // 1) ưu tiên lấy thông tin từ API auth/me nếu token hợp lệ
+            try {
+                const result = await getMe();
+                console.log("getMe result: ", result);
+                const userData = result?.user || result?.data?.user || result;
+                if (userData) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        name: userData.fullName || userData.name || userData.email || prev.name || "",
+                        phone: userData.phone || prev.phone || "",
+                        address: userData.address || prev.address || ""
+                    }));
+                    return;
+                }
+            } catch (error) {
+                console.warn("getMe failed:", error);
+                // không bắt buộc, tiếp tục kiểm tra localStorage
+            }
+
+            // 2) fallback: localStorage.user (đã login)
+            const rawUser = localStorage.getItem("user");
+            if (rawUser) {
+                try {
+                    const user = JSON.parse(rawUser);
+                    setFormData((prev) => ({
+                        ...prev,
+                        name: user.fullName || user.name || prev.name || "",
+                        phone: user.phone || prev.phone || "",
+                        address: user.address || prev.address || ""
+                    }));
+                } catch (err) {
+                    console.warn("Không thể parse user từ localStorage:", err);
+                }
+            }
+        };
+
+        initUser();
+    }, []);
 
     // Bắt sự kiện người dùng gõ vào form
     const handleChange = (e) => {

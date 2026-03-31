@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getProducts } from "../api/productApi";
 
@@ -7,12 +7,34 @@ const formatVND = (value) => {
     return new Intl.NumberFormat("vi-VN").format(n) + " đ";
 };
 
-export function ProductPage() {
+export function ProductPage({ setCart }) {
     const [sortBy, setSortBy] = useState("Most Popular");
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [toastMessage, setToastMessage] = useState("");
     const [searchParams] = useSearchParams();
+    const toastTimerRef = useRef(null);
+
+    const addToCart = (product) => {
+        if (!setCart || typeof setCart !== "function") {
+            console.warn("setCart không được cung cấp");
+            return;
+        }
+
+        setCart((prev) => {
+            const existing = prev.find((p) => p.id === product.id);
+            if (existing) {
+                return prev.map((p) => p.id === product.id ? { ...p, quantity: (p.quantity || 1) + 1 } : p);
+            }
+            return [...prev, { ...product, quantity: 1 }];
+        });
+
+        setToastMessage(`Đã thêm ${product.name} vào giỏ hàng`);
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = setTimeout(() => setToastMessage(""), 2200);
+    };
+
 
     const category = searchParams.get("category") || "";
     const query = searchParams.get("search") || "";
@@ -36,6 +58,14 @@ export function ProductPage() {
         load();
         return () => { active = false; };
     }, [category]);
+
+    useEffect(() => {
+        return () => {
+            if (toastTimerRef.current) {
+                clearTimeout(toastTimerRef.current);
+            }
+        };
+    }, []);
 
     const sortedProducts = useMemo(() => {
         const copy = [...products];
@@ -81,6 +111,14 @@ export function ProductPage() {
                             {category && <><span className="text-muted mx-2">/</span><span className="text-dark fw-bold">{category}</span></>}
                         </nav>
 
+                        {toastMessage && (
+                            <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 1100 }}>
+                                <div className="alert alert-success py-2 px-3 mb-0 shadow" style={{ opacity: 0.95 }}>
+                                    {toastMessage}
+                                </div>
+                            </div>
+                        )}
+
                         <div className="d-flex align-items-start justify-content-between mb-3 flex-wrap gap-2">
                             <div>
                                 <h4 className="fw-bold mb-1" style={{ fontSize: 22 }}>PC Components</h4>
@@ -125,7 +163,7 @@ export function ProductPage() {
 
                         {!loading && !error && filteredProducts.length === 0 && (
                             <div className="alert alert-info">
-                                Không tìm thấy sản phẩm {query ? `cho tìm kiếm "${query}"` : `cho danh mục ${category || "tất cả"}` }.
+                                Không tìm thấy sản phẩm {query ? `cho tìm kiếm "${query}"` : `cho danh mục ${category || "tất cả"}`}.
                             </div>
                         )}
 
@@ -145,8 +183,8 @@ export function ProductPage() {
                                                 <p className="text-muted mb-2" style={{ fontSize: 13 }}>{product.category}</p>
                                                 <p className="fw-bold mb-2" style={{ fontSize: 16 }}>{formatVND(product.price)}</p>
                                                 <p style={{ flex: 1, fontSize: 13, color: "#555" }} className="mb-2 text-truncate">{product.description || "Không có mô tả"}</p>
-                                                <button className="btn btn-primary btn-sm mt-auto" disabled>
-                                                    Chọn mua (coming soon)
+                                                <button className="btn btn-primary btn-sm mt-auto" onClick={() => addToCart(product)}>
+                                                    Thêm vào giỏ hàng
                                                 </button>
                                             </div>
                                         </div>
