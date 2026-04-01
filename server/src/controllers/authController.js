@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // 🔥 FIX ROLE
+        // FIX ROLE
         const role = user.user_type || user.role;
 
         const token = jwt.sign(
@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
                 id: user.id,
                 fullName: user.fullname || user.full_name || null,
                 email: user.email,
-                role: role ? role.toLowerCase() : null, // 🔥 FIX
+                role: role ? role.toLowerCase() : null, // FIX
             },
         });
     } catch (error) {
@@ -85,7 +85,7 @@ exports.me = async (req, res) => {
                 id: req.user.sub,
                 email: req.user.email || null,
                 fullName: user?.fullname || user?.full_name || null,
-                role: (user?.user_type || user?.role || "user").toLowerCase(), // 🔥 FIX
+                role: (user?.user_type || user?.role || "user").toLowerCase(), // FIX
             },
         });
     } catch (error) {
