@@ -1,0 +1,25 @@
+@startuml PC-Store
+
+actor Client
+actor Admin
+actor Staff
+
+rectangle "PC Store System" {
+    Client -- (Sign Up/Sign In)
+    Client -- (Search)
+    Client -- (Browse Products)
+    Client -- (View Product Details)
+    Client -- (Add to Cart)
+    Client -- (Place Order)
+    Client -- (Add to Wishlist)
+    Client -- (Build PC)
+    Client -- (News)
+    Client -- (Ask AI)
+
+    Admin -- (CRUD Product)
+    Admin -- (CRUD User)
+    Admin -- (CRUD Inventory)
+
+    Staff -- (Process Order)
+}
+@enduml
