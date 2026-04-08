@@ -23,13 +23,31 @@
 - Good accessibility (semantic HTML + ARIA).
 - Designed for study and demonstration purposes.
 
-## 5. Technology
+## 5. Use Case Diagram Explanation
+
+- You can see the all the diagrams in `diagrams/`.
+- The system has 3 staksholders which are `Admin`, `Client`, `Staff`.
+- **Client** can browse products, search/filter products, place order, cancel order,sign in/sign up, add to cart, add to wishlist.
+- **Staff** handles the process of order and update order status.
+- **Admin** can manage products, users, inventory
+
+### UseCase relationships
+
+- `<<include>>` is used for mandatory sub-flows that are always executed.
+  - Example: `Place Order` `<<include>>` `Checkout`
+  - Example: `Checkout` `<<include>>` `Validate Cart`
+  - Example: `Checkout` `<<include>>` `Payment Method`
+
+- `<<extend>>` is used for optional or conditional behavior.
+  - Example: `SignUp/SignIn` `<<extend>>` `Checkout` (only when the user is not authenticated)
+
+## Technology
 
 - **Database:**: MariaDB
 - **Frontend**: ReactJS
 - **Backend**: NodeJS, Express
 
-## 6. Access
+## Access
 
 - Frontend: <http://localhost:5173>
 - Backend: <http://localhost:5000>
