@@ -29,7 +29,7 @@
 - The system has 3 staksholders which are `Admin`, `Client`, `Staff`.
 - **Client** can browse products, search/filter products, place order, cancel order,sign in/sign up, add to cart, add to wishlist.
 - **Staff** handles the process of order and update order status.
-- **Admin** can manage products, users, inventory
+- **Admin** can manage products, users, inventory.
 
 ### UseCase relationships
 
@@ -41,13 +41,13 @@
 - `<<extend>>` is used for optional or conditional behavior.
   - Example: `SignUp/SignIn` `<<extend>>` `Checkout` (only when the user is not authenticated)
 
-## Technology
+## 6. Technology
 
 - **Database:**: MariaDB
 - **Frontend**: ReactJS
 - **Backend**: NodeJS, Express
 
-## Access
+## 7. Access
 
 - Frontend: <http://localhost:5173>
 - Backend: <http://localhost:5000>
