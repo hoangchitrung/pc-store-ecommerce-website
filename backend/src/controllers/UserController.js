@@ -1,5 +1,7 @@
 const userService = require('../services/UserServices.js');
 
+// User Controllers are calling from User Service
+
 const getAllUserController = async (req, res) => {
     try {
         const users = await userService.getAllUsers();
@@ -22,6 +24,19 @@ const getUserByIdController = async (req, res) => {
     }
 }
 
+const addUserController = async (req, res) => {
+    try {
+        const users = await userService.addUser(req.body);
+
+        if (!users) {
+            return res.status(409).json({ message: "Can not add user" });
+        }
+
+        return res.status(200).json({ message: "Added new user" });
+    } catch (error) {
+        return res.status(500).json({ message: `Database error: ${error.message}` });
+    }
+}
 const updateUserByIdController = async (req, res) => {
     try {
         const id = req.params.id;
@@ -29,7 +44,7 @@ const updateUserByIdController = async (req, res) => {
         const users = await userService.updateUserById(id, data);
 
         if (!users) {
-            return res.status(404).json({ message: `Can not find user with ${id}` });
+            return res.status(404).json({ message: `Can not find user with ${id} to update` });
         }
 
         return res.status(200).json(users);
@@ -38,4 +53,19 @@ const updateUserByIdController = async (req, res) => {
     }
 }
 
-module.exports = { getAllUserController, getUserByIdController };
+const removeUserByIdController = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const users = await userService.removeUserById(id);
+
+        if (users) {
+            return res.status(404).json({ message: `Can not remove user with id ${id}` });
+        }
+
+        return res.status(200).json({ message: `Deleted user with id ${id}` });
+    } catch (error) {
+        return res.status(500).json({ message: `Database error: ${error.message}` });
+    }
+}
+
+module.exports = { getAllUserController, getUserByIdController, addUserController, removeUserByIdController };

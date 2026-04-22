@@ -1,5 +1,5 @@
 const connection = require("../config/db.js");
-
+const bcrypt = require("bcryptjs");
 // Get all users
 const getAllUsers = () => {
     try {
@@ -38,8 +38,8 @@ const getUserById = (id) => {
     });
 }
 
-const removeUserById = (id) => {
-    return new Promise((resolve, reject) => {
+const removeUserById = async (id) => {
+    return new Promise( async(resolve, reject) => {
         const sql = 'delete from users where id = ?';
 
         connection.query(sql, [id], (err, result) => {
@@ -53,6 +53,28 @@ const removeUserById = (id) => {
 
             return resolve(result[0]);
         });
+    });
+}
+// add new user to record and hash the password before adding
+const addUser = async (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { first_name, last_name, email, hashed_password, address = null, phone_number = null, role = 'client' } = data;
+
+            // hashed password
+            const hash = await bcrypt.hash(hashed_password, 10);
+
+            const sql = "INSERT INTO users (first_name, last_name, hashed_password, email, address, phone_number, role) VALUES (?, ?, ?, ?, ?, ?, ?);";
+            const params = [first_name, last_name, hash, email, address, phone_number, role];
+
+            connection.query(sql, params, (err, result) => {
+                if (err) return reject(err);
+
+                return resolve(result);
+            })
+        } catch (error) {
+            return reject(error);
+        }
     });
 }
 
@@ -74,4 +96,4 @@ const updateUserById = (id, data) => {
     });
 }
 
-module.exports = { getAllUsers, getUserById, updateUserById };
+module.exports = { getAllUsers, getUserById, addUser, updateUserById, removeUserById };

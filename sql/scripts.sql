@@ -1,7 +1,3 @@
-CREATE DATABASE pcdb;
-
-USE pcdb;
-
 -- TABLES
 
 CREATE TABLE users (
@@ -44,8 +40,8 @@ CREATE TABLE wishlist_items (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE carts (
@@ -54,7 +50,7 @@ CREATE TABLE carts (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE cart_items (
@@ -65,8 +61,8 @@ CREATE TABLE cart_items (
     unit_price DECIMAL(10, 2) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (id),
-    Foreign Key (cart_id) REFERENCES carts (id),
-    Foreign Key (product_id) REFERENCES products (id)
+    Foreign Key (cart_id) REFERENCES carts (id) ON DELETE CASCADE,
+    Foreign Key (product_id) REFERENCES products (id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE orders (
@@ -83,7 +79,7 @@ CREATE TABLE orders (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    Foreign Key (user_id) REFERENCES users (id),
+    Foreign Key (user_id) REFERENCES users (id) ON DELETE CASCADE,
     UNIQUE KEY uq_order_code (order_code),
     INDEX idx_order_user_id (user_id),
     INDEX idx_orders_status (status),
@@ -102,7 +98,7 @@ CREATE TABLE payments (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    Foreign Key (order_id) REFERENCES orders (id),
+    Foreign Key (order_id) REFERENCES orders (id) ON DELETE CASCADE,
     UNIQUE KEY uq_payments_provider_transaction (provider, transaction_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
