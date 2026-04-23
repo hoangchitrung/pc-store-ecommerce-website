@@ -1,7 +1,11 @@
 const userService = require('../services/UserServices.js');
 
-// User Controllers are calling from User Service
-
+/**
+ * Call from the user service function to get users list
+ * @param {*} req 
+ * @param {*} res 
+ * @returns JSON response to client
+ */
 const getAllUserController = async (req, res) => {
     try {
         const users = await userService.getAllUsers();
@@ -11,6 +15,12 @@ const getAllUserController = async (req, res) => {
     }
 }
 
+/**
+ * Call from the user service function to get a specific user
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getUserByIdController = async (req, res) => {
     try {
         const id = req.params.id;
@@ -42,6 +52,13 @@ const addUserController = async (req, res) => {
         return res.status(500).json({ message: `Database error: ${error.message}` });
     }
 }
+
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns a JSON response to the client.
+ */
 const updateUserByIdController = async (req, res) => {
     try {
         const id = req.params.id;

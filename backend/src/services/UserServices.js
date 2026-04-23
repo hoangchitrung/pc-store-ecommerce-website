@@ -1,6 +1,10 @@
 const connection = require("../config/db.js");
 const bcrypt = require("bcryptjs");
-// Get all users
+
+/**
+ * Get all users
+ * @returns an array object
+ */
 const getAllUsers = () => {
     try {
         return new Promise((resolve, reject) => {
@@ -18,7 +22,11 @@ const getAllUsers = () => {
     }
 };
 
-// get user by id
+/**
+ * Find a spefific user
+ * @param {*} id 
+ * @returns an object
+ */
 const getUserById = (id) => {
     return new Promise((resolve, reject) => {
         const sql = `select * from users where id = ?;`;
@@ -38,6 +46,11 @@ const getUserById = (id) => {
     });
 }
 
+/**
+ * Remove a specific user
+ * @param {*} id 
+ * @returns 
+ */
 const removeUserById = async (id) => {
     return new Promise(async (resolve, reject) => {
         const sql = 'delete from users where id = ?';
@@ -55,7 +68,11 @@ const removeUserById = async (id) => {
         });
     });
 }
-// add new user to record and hash the password before adding
+/**
+ * Add users with allowed fields
+ * @param {*} data 
+ * @returns a new object
+ */
 const addUser = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -78,7 +95,12 @@ const addUser = async (data) => {
     });
 }
 
-// update user
+/**
+ * Update object properties by finding id and update the allowed fields
+ * @param {*} id 
+ * @param {*} data 
+ * @returns an object with updated properties
+ */
 const updateUserById = (id, data) => {
     return new Promise((resolve, reject) => {
         // update only these fields
