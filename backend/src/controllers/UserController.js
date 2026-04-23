@@ -26,6 +26,11 @@ const getUserByIdController = async (req, res) => {
 
 const addUserController = async (req, res) => {
     try {
+        const { first_name, last_name, email, hashed_password, address = null, phone_number = null, role = 'client' } = req.body;
+
+        if (!first_name || !last_name || !email || !hashed_password)
+            return res.status(400).json({ message: "Please fill all the fields" });
+
         const users = await userService.addUser(req.body);
 
         if (!users) {
@@ -40,14 +45,14 @@ const addUserController = async (req, res) => {
 const updateUserByIdController = async (req, res) => {
     try {
         const id = req.params.id;
-        const data = { first_name, last_name, address, phone_number };
-        const users = await userService.updateUserById(id, data);
+        const { first_name, last_name, address, phone_number } = req.body;
+        const users = await userService.updateUserById(id, req.body);
 
         if (!users) {
             return res.status(404).json({ message: `Can not find user with ${id} to update` });
         }
 
-        return res.status(200).json(users);
+        return res.status(200).json({ message: `Updated user with id ${id}` });
     } catch (error) {
         return res.status(500).json({ message: `Database Error: ${error.message}` });
     }
@@ -68,4 +73,4 @@ const removeUserByIdController = async (req, res) => {
     }
 }
 
-module.exports = { getAllUserController, getUserByIdController, addUserController, removeUserByIdController };
+module.exports = { getAllUserController, getUserByIdController, addUserController, updateUserByIdController, removeUserByIdController };

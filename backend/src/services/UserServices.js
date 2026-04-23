@@ -39,7 +39,7 @@ const getUserById = (id) => {
 }
 
 const removeUserById = async (id) => {
-    return new Promise( async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const sql = 'delete from users where id = ?';
 
         connection.query(sql, [id], (err, result) => {
@@ -64,7 +64,7 @@ const addUser = async (data) => {
             // hashed password
             const hash = await bcrypt.hash(hashed_password, 10);
 
-            const sql = "INSERT INTO users (first_name, last_name, hashed_password, email, address, phone_number, role) VALUES (?, ?, ?, ?, ?, ?, ?);";
+            const sql = `INSERT INTO users (first_name, last_name, hashed_password, email, address, phone_number, role) VALUES (?, ?, ?, ?, ?, ?, ?);`;
             const params = [first_name, last_name, hash, email, address, phone_number, role];
 
             connection.query(sql, params, (err, result) => {
@@ -78,20 +78,29 @@ const addUser = async (data) => {
     });
 }
 
-// later
+// update user
 const updateUserById = (id, data) => {
     return new Promise((resolve, reject) => {
-        const sql = 'update users set first_name = ?;';
+        // update only these fields
+        const { first_name, last_name, email, address, phone_number, role } = data;
 
-        connection.query(sql, [name], (err, result) => {
-            if (err) {
-                return reject(err);
-            }
+        const sql = `
+            UPDATE users
+            SET first_name = ?,
+                last_name = ?,
+                email = ?,
+                address = ?,
+                phone_number = ?,
+                role = ?
+                WHERE id = ?;
+        `;
 
-            if (result.length === 0) {
-                return resolve(null);
-            }
-            return resolve(result[0]);
+        const params = [first_name, last_name, email, address, phone_number, role, id];
+
+        connection.query(sql, params, (err, result) => {
+            if (err) return reject(err);
+            if (result.affectedRows === 0) return resolve(null); // no user found
+            return resolve(result);
         });
     });
 }
