@@ -10,6 +10,7 @@ app.listen(port, () => {
     connection.connect((err) => {
         if (err) {
             console.error(`Failed to connect to MySQL/MariaDB ${err.message}`);
+            return;
         }
         console.log("Database connected");
     });

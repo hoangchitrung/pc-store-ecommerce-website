@@ -122,9 +122,21 @@ const updateUserById = (id, data) => {
         connection.query(sql, params, (err, result) => {
             if (err) return reject(err);
             if (result.affectedRows === 0) return resolve(null); // no user found
-            return resolve(result);
+            return resolve(result[0]);
         });
     });
 }
 
-module.exports = { getAllUsers, getUserById, addUser, updateUserById, removeUserById };
+const getUserByEmail = async (email) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM users WHERE email = ?";
+
+        connection.query(sql, [email], (err, result) => {
+            if (err) return reject(err);
+            if (result.length === 0) return resolve(null); // no user found
+            return resolve(result[0]);
+        })
+    })
+}
+
+module.exports = { getAllUsers, getUserById, addUser, updateUserById, removeUserById, getUserByEmail, getUserByEmail };

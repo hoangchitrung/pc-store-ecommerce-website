@@ -19,7 +19,7 @@ const getAllUserController = async (req, res) => {
  * Call from the user service function to get a specific user
  * @param {*} req 
  * @param {*} res 
- * @returns 
+ * @returns JSON response with user base on the id
  */
 const getUserByIdController = async (req, res) => {
     try {
@@ -34,6 +34,12 @@ const getUserByIdController = async (req, res) => {
     }
 }
 
+/**
+ * Call from the user service function to add new user with hashed password
+ * @param {*} req 
+ * @param {*} res 
+ * @returns JSON response 
+ */
 const addUserController = async (req, res) => {
     try {
         const { first_name, last_name, email, hashed_password, address = null, phone_number = null, role = 'client' } = req.body;
@@ -54,7 +60,7 @@ const addUserController = async (req, res) => {
 }
 
 /**
- * 
+ * Update user with allowed fields
  * @param {*} req 
  * @param {*} res 
  * @returns a JSON response to the client.
@@ -75,6 +81,12 @@ const updateUserByIdController = async (req, res) => {
     }
 }
 
+/**
+ * Remove user by Id
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const removeUserByIdController = async (req, res) => {
     try {
         const id = req.params.id;
@@ -90,4 +102,19 @@ const removeUserByIdController = async (req, res) => {
     }
 }
 
-module.exports = { getAllUserController, getUserByIdController, addUserController, updateUserByIdController, removeUserByIdController };
+const getUserByEmailController = async (req, res) => {
+    try {
+        const email = req.params.email;
+        const users = await userService.getUserByEmail(email);
+
+        if (!users) {
+            return res.status(404).json({ messag: "This user is not exist" });
+        }
+
+        return res.status(200).json({ message: "This user exist" });
+    } catch (error) {
+        res.status(500).json({ message: `Database error: ${error.message}` });
+    }
+}
+
+module.exports = { getAllUserController, getUserByIdController, addUserController, updateUserByIdController, removeUserByIdController, getUserByEmailController };
