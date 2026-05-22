@@ -29,7 +29,7 @@ export class Inventory {
     default: 0,
     comment: 'Số lượng khách hàng đặt sản phẩm',
   })
-  reversed_quantity!: number;
+  reserved_quantity!: number;
 
   @Column({
     type: 'int',
@@ -38,7 +38,7 @@ export class Inventory {
   })
   minimum_quantity!: number;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   location?: string;
 
   @UpdateDateColumn()

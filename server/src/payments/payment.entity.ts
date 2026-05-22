@@ -24,6 +24,9 @@ export class Payment {
   @JoinColumn({ name: 'order_id' })
   order!: Order;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  amount!: number;
+
   @Column({ default: 'pending' })
   status!: string;
 

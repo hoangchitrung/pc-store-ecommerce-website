@@ -24,7 +24,7 @@ export class Order {
   total_price!: number;
 
   @Column({ length: 255 })
-  shpping_address!: string;
+  shipping_address!: string;
 
   @Column({ length: 100 })
   recipient_name!: string;
