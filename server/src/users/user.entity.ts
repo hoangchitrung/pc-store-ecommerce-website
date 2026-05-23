@@ -20,7 +20,7 @@ export class User {
   @Column({ length: 100, nullable: true })
   full_name?: string;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ type: 'int', nullable: true })
   phone_number?: number;
 
   @Column({ length: 255, nullable: true })
