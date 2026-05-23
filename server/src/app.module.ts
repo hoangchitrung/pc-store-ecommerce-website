@@ -11,6 +11,7 @@ import { Payment } from './payments/payment.entity';
 import { Inventory } from './inventory/inventory.entity';
 import { ProductSerialNumber } from './products_serial_numbers/product_serial_number.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: true, // automatically create and sync from code to DB
       }),
     }),
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
