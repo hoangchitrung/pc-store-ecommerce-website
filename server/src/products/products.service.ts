@@ -33,14 +33,11 @@ export class ProductsService {
 
   // READ: get specific user by ID
   async findOne(id: number) {
-    try {
-      const product = await this.productRepository.findOneBy({ id });
-      if (!product)
-        throw new NotFoundException(`Not found product with id ${id}`);
-      return product;
-    } catch (error) {
-      return (error as Error).message;
-    }
+    const product = await this.productRepository.findOneBy({ id });
+    if (!product)
+      throw new NotFoundException(`Not found product with id ${id}`);
+
+    return product;
   }
 
   // UPDATE: update product information
@@ -48,19 +45,22 @@ export class ProductsService {
     try {
       const product = await this.findOne(id);
       // overrite the old fields
-      Object.assign(product, updateProductDto);
-      return this.productRepository.save(product);
+      const updatedProduct = Object.assign(product, updateProductDto);
+      return this.productRepository.save(updatedProduct);
     } catch (error) {
       return (error as Error).message;
     }
   }
 
   // DELETE: remove product by id
+  // remove() is for object/entites
+  // delete() just only delete by id
   async remove(id: number) {
     try {
       const product = await this.findOne(id);
 
-      return this.productRepository.delete(product);
+      await this.productRepository.remove(product);
+      return { message: `Removed product with id ${id}` };
     } catch (error) {
       return (error as Error).message;
     }
