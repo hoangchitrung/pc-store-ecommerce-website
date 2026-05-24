@@ -12,6 +12,13 @@ import { Inventory } from './inventory/inventory.entity';
 import { ProductSerialNumber } from './products_serial_numbers/product_serial_number.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
+import { UsersModule } from './users/users.module';
+import { OrdersModule } from './orders/orders.module';
+import { OrderitemsModule } from './orderitems/orderitems.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { CartsModule } from './carts/carts.module';
+import { PaymentsModule } from './payments/payments.module';
+import { ProductsSerialNumbersModule } from './products_serial_numbers/products_serial_numbers.module';
 
 @Module({
   imports: [
@@ -42,6 +49,13 @@ import { ProductsModule } from './products/products.module';
       }),
     }),
     ProductsModule,
+    UsersModule,
+    OrdersModule,
+    OrderitemsModule,
+    InventoryModule,
+    CartsModule,
+    PaymentsModule,
+    ProductsSerialNumbersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
