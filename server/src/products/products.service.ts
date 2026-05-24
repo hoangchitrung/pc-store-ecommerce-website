@@ -18,29 +18,41 @@ export class ProductsService {
       const newProduct = this.productRepository.create(createProductDto);
       return this.productRepository.save(newProduct);
     } catch (error) {
-      console.error(error);
+      return (error as Error).message;
     }
   }
 
   // READ: get all users
   findAll() {
-    return this.productRepository.find();
+    try {
+      return this.productRepository.find();
+    } catch (error) {
+      return (error as Error).message;
+    }
   }
 
   // READ: get specific user by ID
   async findOne(id: number) {
-    const product = await this.productRepository.findOneBy({ id });
-    if (!product)
-      throw new NotFoundException(`Not found product with id ${id}`);
-    return product;
+    try {
+      const product = await this.productRepository.findOneBy({ id });
+      if (!product)
+        throw new NotFoundException(`Not found product with id ${id}`);
+      return product;
+    } catch (error) {
+      return (error as Error).message;
+    }
   }
 
   // UPDATE: update product information
   async update(id: number, updateProductDto: UpdateProductDto) {
-    const product = await this.findOne(id);
-    // overrite the old fields
-    Object.assign(product, updateProductDto);
-    return this.productRepository.save(product);
+    try {
+      const product = await this.findOne(id);
+      // overrite the old fields
+      Object.assign(product, updateProductDto);
+      return this.productRepository.save(product);
+    } catch (error) {
+      return (error as Error).message;
+    }
   }
 
   // DELETE: remove product by id
@@ -50,7 +62,7 @@ export class ProductsService {
 
       return this.productRepository.delete(product);
     } catch (error) {
-      console.error(error);
+      return (error as Error).message;
     }
   }
 }
