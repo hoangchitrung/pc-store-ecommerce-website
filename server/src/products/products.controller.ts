@@ -15,9 +15,9 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
 
-  @Post() // Catch request as post to create
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  @Get()
+  findAll() {
+    return this.productService.findAll();
   }
 
   @Get(':id') // Catch get request
@@ -25,9 +25,9 @@ export class ProductsController {
     return this.productService.findOne(Number(id));
   }
 
-  @Get()
-  findAll() {
-    return this.productService.findAll();
+  @Post() // Catch request as post to create
+  create(@Body() createProductDto: CreateProductDto) {
+    return this.productService.create(createProductDto);
   }
 
   @Patch(':id')

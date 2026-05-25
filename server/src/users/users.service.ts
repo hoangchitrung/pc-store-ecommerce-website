@@ -38,21 +38,28 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    try {
-      const user = await this.userRepository.findOneBy({ id });
-      if (!user) {
-        throw new NotFoundException('This user is not exists');
-      }
-      return user;
-    } catch (error) {
-      return (error as Error).message;
-    }
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user)
+      throw new NotFoundException(`This user with id ${id} is not exists`);
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.findOne(id);
       const updateUser = Object.assign(user, updateUserDto);
+
+      return this.userRepository.save(updateUser);
+    } catch (error) {
+      return (error as Error).message;
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const user = await this.findOne(id);
+
+      return this.userRepository.remove(user);
     } catch (error) {
       return (error as Error).message;
     }
