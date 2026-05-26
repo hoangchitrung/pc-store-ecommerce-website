@@ -19,6 +19,7 @@ import { InventoryModule } from './inventory/inventory.module';
 import { CartsModule } from './carts/carts.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ProductsSerialNumbersModule } from './products_serial_numbers/products_serial_numbers.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { ProductsSerialNumbersModule } from './products_serial_numbers/products_
     CartsModule,
     PaymentsModule,
     ProductsSerialNumbersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

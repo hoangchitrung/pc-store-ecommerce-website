@@ -39,8 +39,16 @@ export class UsersService {
 
   async findOne(id: number) {
     const user = await this.userRepository.findOneBy({ id });
+
     if (!user)
       throw new NotFoundException(`This user with id ${id} is not exists`);
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+
+    if (!user) return null;
     return user;
   }
 
