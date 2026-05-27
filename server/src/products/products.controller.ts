@@ -25,6 +25,31 @@ export class ProductsController {
     return this.productService.findOne(Number(id));
   }
 
+  @Get('/search/:name')
+  findByName(@Param('name') name: string) {
+    return this.productService.findByName(name.toLowerCase());
+  }
+
+  @Get('/sort/low-to-high')
+  sortLowToHigh() {
+    return this.productService.sortLowToHigh();
+  }
+
+  @Get('/sort/high-to-low')
+  sortHighToLow() {
+    return this.productService.sortHighToLow();
+  }
+
+  @Get('/category/:category')
+  findByCategory(@Param('category') category: string) {
+    return this.productService.findByCategory(category.toLowerCase());
+  }
+
+  @Get('/brand/:brand')
+  findByBrand(@Param('brand') brand: string) {
+    return this.productService.findByBrand(brand.toLowerCase());
+  }
+
   @Post() // Catch request as post to create
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);

@@ -13,6 +13,7 @@ export class Product {
   id!: number;
 
   @Column({ length: 255 })
+  @Index('idx_name')
   name!: string;
 
   @Column({ length: 100 })

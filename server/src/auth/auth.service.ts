@@ -22,7 +22,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(
+  async signIn(
     email: string,
     password: string,
   ): Promise<{ access_token: string }> {
@@ -43,7 +43,7 @@ export class AuthService {
     };
   }
 
-  async register(createUserDto: CreateUserDto) {
+  async signUp(createUserDto: CreateUserDto) {
     const userExist = await this.userService.findByEmail(createUserDto.email);
 
     if (userExist) throw new ConflictException('This email is already exist');

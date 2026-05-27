@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './product.entity';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -13,27 +13,28 @@ export class ProductsService {
   ) {}
 
   // CREATE: new product
-  create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto) {
     try {
       const newProduct = this.productRepository.create(createProductDto);
-      return this.productRepository.save(newProduct);
+      await this.productRepository.save(newProduct);
+      return { message: 'Product added' };
     } catch (error) {
       return (error as Error).message;
     }
   }
 
   // READ: get all users
-  findAll() {
-    try {
-      return this.productRepository.find();
-    } catch (error) {
-      return (error as Error).message;
-    }
+  async findAll() {
+    const products: Product[] = await this.productRepository.find();
+    if (!products) throw new NotFoundException('This product is not exist');
+    return products;
   }
 
   // READ: get specific user by ID
   async findOne(id: number) {
-    const product = await this.productRepository.findOneBy({ id });
+    const product: Product | null = await this.productRepository.findOneBy({
+      id,
+    });
     if (!product)
       throw new NotFoundException(`Not found product with id ${id}`);
 
@@ -43,7 +44,7 @@ export class ProductsService {
   // UPDATE: update product information
   async update(id: number, updateProductDto: UpdateProductDto) {
     try {
-      const product = await this.findOne(id);
+      const product: Product = await this.findOne(id);
       // overrite the old fields
       const updatedProduct = Object.assign(product, updateProductDto);
       return this.productRepository.save(updatedProduct);
@@ -57,12 +58,61 @@ export class ProductsService {
   // delete() just only delete by id
   async remove(id: number) {
     try {
-      const product = await this.findOne(id);
+      const product: Product = await this.findOne(id);
 
       await this.productRepository.remove(product);
       return { message: `Removed product with id ${id}` };
     } catch (error) {
       return (error as Error).message;
     }
+  }
+  // search product by name with Like to be able to find product with similar name
+  async findByName(name: string) {
+    const products: Product[] = await this.productRepository.find({
+      where: { name: Like(`%${name}%`) },
+    });
+
+    if (!products) throw new NotFoundException(`This product is not exist`);
+    return products;
+  }
+  // search product by name with Like to be able to find product with similar category for sorting
+  async findByCategory(category: string) {
+    const products: Product[] = await this.productRepository.find({
+      where: { category: Like(`%${category}%`) },
+    });
+    if (!products) throw new NotFoundException(`This product is not exist`);
+    return products;
+  }
+
+  async findByBrand(brand: string) {
+    const products: Product[] = await this.productRepository.find({
+      where: { brand: Like(`%${brand}%`) },
+    });
+    if (!products) throw new NotFoundException(`This product is not exist`);
+    return products;
+  }
+
+  async sortLowToHigh() {
+    const products: Product[] | string = await this.findAll();
+
+    if (!products) throw new NotFoundException('This product is not exist');
+
+    const sortedProducts: Product[] = products.sort(
+      (a, b) => a.price - b.price,
+    );
+
+    return sortedProducts;
+  }
+
+  async sortHighToLow() {
+    const products: Product[] | string = await this.findAll();
+
+    if (!products) throw new NotFoundException('This product is not exist');
+
+    const sortedProducts: Product[] = products.sort(
+      (a, b) => b.price - a.price,
+    );
+
+    return sortedProducts;
   }
 }
