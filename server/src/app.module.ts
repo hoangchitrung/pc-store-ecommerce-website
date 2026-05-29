@@ -49,6 +49,7 @@ import { AuthModule } from './auth/auth.module';
         synchronize: true, // automatically create and sync from code to DB
       }),
     }),
+    AuthModule,
     ProductsModule,
     UsersModule,
     OrdersModule,
@@ -57,7 +58,6 @@ import { AuthModule } from './auth/auth.module';
     CartsModule,
     PaymentsModule,
     ProductsSerialNumbersModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

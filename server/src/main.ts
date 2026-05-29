@@ -11,6 +11,7 @@ async function bootstrap() {
     .setDescription('API Documents for PC STORE PROJECT')
     .setVersion('1.0')
     .addTag('Products')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
