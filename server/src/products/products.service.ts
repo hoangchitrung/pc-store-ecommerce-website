@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './product.entity';
 import { Repository, Like } from 'typeorm';
@@ -14,13 +18,10 @@ export class ProductsService {
 
   // CREATE: new product
   async create(createProductDto: CreateProductDto) {
-    try {
-      const newProduct = this.productRepository.create(createProductDto);
-      await this.productRepository.save(newProduct);
-      return { message: 'Product added' };
-    } catch (error) {
-      return (error as Error).message;
-    }
+    const newProduct: Product = this.productRepository.create(createProductDto);
+
+    if (!newProduct) throw new BadRequestException('Error when create account');
+    return await this.productRepository.save(newProduct);
   }
 
   // READ: get all users

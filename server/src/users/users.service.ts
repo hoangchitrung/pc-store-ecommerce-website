@@ -14,31 +14,28 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    try {
-      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword: string = await bcrypt.hash(
+      createUserDto.password,
+      10,
+    );
 
-      const userData = {
-        ...createUserDto,
-        password: hashedPassword,
-      };
+    const userData = {
+      ...createUserDto,
+      password: hashedPassword,
+    };
 
-      const newUser = this.userRepository.create(userData);
-      return this.userRepository.save(newUser);
-    } catch (error) {
-      return (error as Error).message;
-    }
+    const newUser: User = this.userRepository.create(userData);
+    return this.userRepository.save(newUser);
   }
 
-  findAll() {
-    try {
-      return this.userRepository.find();
-    } catch (error) {
-      return (error as Error).message;
-    }
+  async findAll() {
+    const users: User[] = await this.userRepository.find();
+    if (!users) throw new NotFoundException('There are no users');
+    return users;
   }
 
   async findOne(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
+    const user: User | null = await this.userRepository.findOneBy({ id });
 
     if (!user)
       throw new NotFoundException(`This user with id ${id} is not exists`);
@@ -46,30 +43,25 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    const user = await this.userRepository.findOneBy({ email });
+    const user: User | null = await this.userRepository.findOneBy({ email });
 
     if (!user) return null;
     return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    try {
-      const user = await this.findOne(id);
-      const updateUser = Object.assign(user, updateUserDto);
+    const user: User | null = await this.findOne(id);
 
-      return this.userRepository.save(updateUser);
-    } catch (error) {
-      return (error as Error).message;
-    }
+    if (!user) throw new NotFoundException('User not found');
+
+    const updateUser = Object.assign(user, updateUserDto);
+    return this.userRepository.save(updateUser);
   }
 
   async remove(id: number) {
-    try {
-      const user = await this.findOne(id);
+    const user: User | null = await this.findOne(id);
 
-      return this.userRepository.remove(user);
-    } catch (error) {
-      return (error as Error).message;
-    }
+    if (!user) throw new NotFoundException('User not found');
+    return this.userRepository.remove(user);
   }
 }

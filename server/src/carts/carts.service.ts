@@ -24,7 +24,7 @@ export class CartsService {
   async addToCart(userId: number, createCartDto: CreateCartDto) {
     const { product_id, quantity }: CreateCartDto = createCartDto;
     // check if product is exist
-    const product = await this.productRepository.findOneBy({
+    const product: Product | null = await this.productRepository.findOneBy({
       id: product_id,
     });
 
@@ -34,7 +34,7 @@ export class CartsService {
       );
 
     // check if the product is in cart or not
-    const existInCart = await this.cartRepository.findOne({
+    const existInCart: Cart | null = await this.cartRepository.findOne({
       where: { user_id: { id: userId }, product_id: { id: product_id } },
     });
 
@@ -45,7 +45,7 @@ export class CartsService {
     }
 
     // Not in cart, create new record
-    const newItem = this.cartRepository.create({
+    const newItem: Cart = this.cartRepository.create({
       user_id: { id: userId },
       product_id: product,
       quantity: quantity,
@@ -83,7 +83,7 @@ export class CartsService {
 
     return cart;
   }
-
+  // UPDATE quantity of cart in cart table
   async increaseQuantity(id: number) {
     const cart: Cart = await this.findOne(id);
 
