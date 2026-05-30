@@ -17,11 +17,11 @@ export class Cart {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   @Index('idx_user_id')
-  user!: User;
+  user_id!: User;
 
   @ManyToOne(() => Product, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'product_id' })
-  product!: Product;
+  product_id!: Product;
 
   @Column({ type: 'int', default: 1 })
   quantity!: number;
