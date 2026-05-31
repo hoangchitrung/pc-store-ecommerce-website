@@ -62,7 +62,7 @@ export class CartsService {
   async findAll() {
     const carts: Cart[] = await this.cartRepository.find();
 
-    if (!carts) throw new NotFoundException('Carts are empty!');
+    if (carts.length === 0) throw new NotFoundException('Carts are empty!');
 
     return carts;
   }
@@ -88,8 +88,8 @@ export class CartsService {
     const cart: Cart = await this.findOne(id);
 
     if (!cart) throw new NotFoundException('This cart is not exist');
-
-    return await this.cartRepository.increment({ id: id }, 'quantity', 1);
+    await this.cartRepository.increment({ id: id }, 'quantity', 1);
+    return await this.findOne(id);
   }
 
   async decreaseQuantity(id: number) {
@@ -97,10 +97,11 @@ export class CartsService {
 
     if (!cart) throw new NotFoundException('This cart is not exist');
 
-    if (cart.quantity < 1)
-      throw new BadRequestException('Quantity can not go below 0');
+    if (cart.quantity < 2)
+      throw new BadRequestException('Quantity can not go below 1');
 
-    return await this.cartRepository.decrement({ id: id }, 'quantity', 1);
+    await this.cartRepository.decrement({ id: id }, 'quantity', 1);
+    return await this.findOne(id);
   }
 
   async remove(id: number) {
