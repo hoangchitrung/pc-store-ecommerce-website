@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './payment.entity';
 import { Repository } from 'typeorm';
@@ -14,10 +14,25 @@ export class PaymentsService {
     private orderService: OrdersService,
   ) {}
 
-  async create(order_id: number, createPaymentDto: CreatePaymentDto) {
-    const order: Order = await this.orderService.findOne(order_id);
+  async create(userId: number, createPaymentDto: CreatePaymentDto) {
+    const order: Order = await this.orderService.findOne(
+      createPaymentDto.order_id,
+    );
 
-    let amount = 0;
-    
+    if (order.user_id.id !== userId)
+      throw new ForbiddenException(
+        'You do not have permission to pay for this order',
+      );
+
+    const newPayment: Payment = this.paymentRepository.create({
+      user_id: order.user_id,
+      order_id: order,
+      amount: order.total_price,
+      status: 'pending',
+      type: createPaymentDto.type,
+    });
+
+    await this.paymentRepository.save(newPayment);
+    return newPayment;
   }
 }

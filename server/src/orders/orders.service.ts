@@ -72,7 +72,12 @@ export class OrdersService {
   }
 
   async findOne(id: number) {
-    const order: Order | null = await this.orderRepository.findOneBy({ id });
+    const order: Order | null = await this.orderRepository.findOne({
+      where: { id },
+      relations: {
+        user_id: true,
+      },
+    });
 
     if (!order) throw new NotFoundException('Order not found');
     return order;
