@@ -92,7 +92,7 @@ export class OrdersService {
   }
 
   async updateOrderStatus(id: number, updateOrderDto: UpdateOrderDto) {
-    const order: Order | null = await this.findOne(id);
+    const order: Order = await this.findOne(id);
 
     const updatedOrder = Object.assign(order, updateOrderDto);
     await this.orderRepository.save(updatedOrder);

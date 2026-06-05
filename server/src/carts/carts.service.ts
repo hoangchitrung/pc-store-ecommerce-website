@@ -10,23 +10,22 @@ import { Product } from '../products/product.entity';
 import { CreateCartDto } from './dto/createCart.dto';
 import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class CartsService {
   constructor(
     @InjectRepository(Cart)
     private cartRepository: Repository<Cart>,
-    @InjectRepository(Product)
-    private productRepository: Repository<Product>,
+    private productService: ProductsService,
     private usersService: UsersService,
   ) {}
 
   async addToCart(userId: number, createCartDto: CreateCartDto) {
     const { product_id, quantity }: CreateCartDto = createCartDto;
     // check if product is exist
-    const product: Product | null = await this.productRepository.findOneBy({
-      id: product_id,
-    });
+    const product: Product | null =
+      await this.productService.findOne(product_id);
 
     if (!product)
       throw new NotFoundException(

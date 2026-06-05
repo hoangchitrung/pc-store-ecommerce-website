@@ -18,13 +18,13 @@ export class Payment {
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user!: User;
+  user_id!: User;
 
   @OneToOne(() => Order, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'order_id' })
-  order!: Order;
+  order_id!: Order;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 15, scale: 2 })
   amount!: number;
 
   @Column({ default: 'pending' })
