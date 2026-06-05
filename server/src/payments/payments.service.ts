@@ -16,5 +16,8 @@ export class PaymentsService {
 
   async create(order_id: number, createPaymentDto: CreatePaymentDto) {
     const order: Order = await this.orderService.findOne(order_id);
+
+    let amount = 0;
+    
   }
 }

@@ -76,6 +76,9 @@ export class CartsService {
           id: userId,
         },
       },
+      relations: {
+        product_id: true,
+      },
     });
     if (cart.length === 0)
       throw new NotFoundException('This user did not have any item in cart');
@@ -103,10 +106,14 @@ export class CartsService {
     return await this.findOne(id);
   }
 
-  async remove(id: number) {
+  async removeById(id: number) {
     const cart: Cart = await this.findOne(id);
 
     if (!cart) throw new NotFoundException('This cart is not exist');
     return await this.cartRepository.remove(cart);
+  }
+
+  async removeByCart(id: number) {
+    return await this.cartRepository.delete({ user_id: { id: id } });
   }
 }

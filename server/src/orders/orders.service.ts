@@ -8,27 +8,21 @@ import { Order } from './order.entity';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Cart } from '../carts/cart.entity';
-import { OrderItem } from '../orderitems/orderitem.entity';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { CartsService } from '../carts/carts.service';
+import { OrderitemsService } from '../orderitems/orderitems.service';
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
-    @InjectRepository(Cart)
-    private cartRepository: Repository<Cart>,
-    @InjectRepository(OrderItem)
-    private orderItemRepository: Repository<OrderItem>,
+    private cartsService: CartsService,
+    private orderitemsService: OrderitemsService,
   ) {}
 
   async create(userId: number, createOrderDto: CreateOrderDto) {
-    const carts: Cart[] = await this.cartRepository.find({
-      where: { user_id: { id: userId } },
-      relations: {
-        product_id: true,
-      },
-    });
+    const carts: Cart[] = await this.cartsService.findUserCart(userId);
 
     if (carts.length === 0)
       throw new BadRequestException('Cart empty, can not order');
@@ -54,18 +48,11 @@ export class OrdersService {
       total_price: totalPrice,
     });
 
-    const savedOrder: Order = await this.orderRepository.save(newOrder);
-
-    const orderItem: OrderItem[] = carts.map((cartItem) => {
-      return this.orderItemRepository.create({
-        order: savedOrder,
-        product: cartItem.product_id,
-        quantity: cartItem.quantity,
-        price: cartItem.product_id.price,
-      });
-    });
-    await this.orderItemRepository.save(orderItem);
-    await this.cartRepository.remove(carts);
+    const savedOrder: void = await this.orderitemsService.create(
+      newOrder,
+      carts,
+    );
+    await this.cartsService.removeByCart(userId);
     return savedOrder;
   }
 
