@@ -20,7 +20,7 @@ export class Order {
   @Column({ default: 'pending' })
   status!: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
   total_price!: number;
 
   @Column({ length: 255 })
@@ -40,8 +40,8 @@ export class Order {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  user!: User;
+  user_id!: User;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
-  orderItem!: OrderItem[];
+  orderItem_id!: OrderItem[];
 }

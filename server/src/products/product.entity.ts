@@ -27,7 +27,7 @@ export class Product {
   @Index('idx_category')
   category!: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 15, scale: 2 })
   price!: number;
 
   @Column({ type: 'int', default: 0 })
