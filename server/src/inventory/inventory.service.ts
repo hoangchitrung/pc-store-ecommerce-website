@@ -49,5 +49,7 @@ export class InventoryService {
       minimum_quantity: 5,
       location: createInventoryDto.location,
     });
+    await this.inventoryRepository.save(newInventory);
+    return newInventory;
   }
 }
