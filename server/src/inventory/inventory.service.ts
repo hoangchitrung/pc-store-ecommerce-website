@@ -1,10 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Inventory } from './inventory.entity';
 import { Repository } from 'typeorm';
 import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { ProductsService } from '../products/products.service';
-import { Product } from '../products/product.entity';
 
 @Injectable()
 export class InventoryService {
@@ -39,17 +42,18 @@ export class InventoryService {
     return { message: 'Deleted Successfully' };
   }
 
-  async create(id: number, createInventoryDto: CreateInventoryDto) {
-    const product: Product = await this.productService.findOne(id);
-
-    const newInventory: Inventory = this.inventoryRepository.create({
-      product_id: product,
-      available_quantity: 0,
-      reserved_quantity: 0,
-      minimum_quantity: 5,
-      location: createInventoryDto.location,
-    });
-    await this.inventoryRepository.save(newInventory);
-    return newInventory;
+  async create(createInventoryDto: CreateInventoryDto) {
+    try {
+      const newInventory: Inventory = this.inventoryRepository.create({
+        product_id: {
+          id: createInventoryDto.product_id,
+        },
+        location: createInventoryDto.location,
+      });
+      await this.inventoryRepository.save(newInventory);
+      return newInventory;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }
