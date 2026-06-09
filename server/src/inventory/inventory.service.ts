@@ -45,7 +45,7 @@ export class InventoryService {
   async create(createInventoryDto: CreateInventoryDto) {
     try {
       const newInventory: Inventory = this.inventoryRepository.create({
-        product_id: {
+        product: {
           id: createInventoryDto.product_id,
         },
         location: createInventoryDto.location,
@@ -55,5 +55,15 @@ export class InventoryService {
     } catch (error) {
       throw new BadRequestException(error);
     }
+  }
+
+  async increaseStock(productId: number, quantityToAdd: number) {
+    const inventory: Inventory | null = await this.inventoryRepository.findOne({
+      where: { id: productId },
+    });
+
+    if (!inventory) throw new NotFoundException('Inventory not found');
+    inventory.available_quantity += quantityToAdd;
+    return await this.inventoryRepository.save(inventory);
   }
 }

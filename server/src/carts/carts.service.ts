@@ -34,7 +34,7 @@ export class CartsService {
 
     // check if the product is in cart or not
     const existInCart: Cart | null = await this.cartRepository.findOne({
-      where: { user_id: { id: userId }, product_id: { id: product_id } },
+      where: { user: { id: userId }, product: { id: product_id } },
     });
 
     if (existInCart) {
@@ -45,8 +45,8 @@ export class CartsService {
 
     // Not in cart, create new record
     const newItem: Cart = this.cartRepository.create({
-      user_id: { id: userId },
-      product_id: product,
+      user: { id: userId },
+      product: product,
       quantity: quantity,
     });
 
@@ -72,12 +72,12 @@ export class CartsService {
 
     const cart: Cart[] = await this.cartRepository.find({
       where: {
-        user_id: {
+        user: {
           id: userId,
         },
       },
       relations: {
-        product_id: true,
+        product: true,
       },
     });
     if (cart.length === 0)
@@ -114,6 +114,6 @@ export class CartsService {
   }
 
   async removeByCart(id: number) {
-    return await this.cartRepository.delete({ user_id: { id: id } });
+    return await this.cartRepository.delete({ user: { id: id } });
   }
 }

@@ -15,7 +15,7 @@ export class Inventory {
 
   @OneToOne(() => Product, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'product_id' })
-  product_id!: Product;
+  product!: Product;
 
   @Column({
     type: 'int',

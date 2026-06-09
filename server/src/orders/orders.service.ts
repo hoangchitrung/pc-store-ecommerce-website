@@ -37,7 +37,7 @@ export class OrdersService {
     let totalPrice = 0;
     carts.forEach((cartItem) => {
       // cartItem.product_id.price will get the price property through cart join product
-      totalPrice += cartItem.quantity * cartItem.product_id.price;
+      totalPrice += cartItem.quantity * cartItem.product.price;
     });
 
     const newOrder: Order = this.orderRepository.create({

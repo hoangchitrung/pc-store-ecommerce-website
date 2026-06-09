@@ -15,9 +15,9 @@ export class OrderitemsService {
     const orderItem: OrderItem[] = carts.map((cartItem) => {
       return this.orderItemRepository.create({
         order: order,
-        product: cartItem.product_id,
+        product: cartItem.product,
         quantity: cartItem.quantity,
-        price: cartItem.product_id.price,
+        price: cartItem.product.price,
       });
     });
     await this.orderItemRepository.save(orderItem);

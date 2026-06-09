@@ -52,6 +52,9 @@ export class Product {
   @Column({ type: 'boolean', default: true })
   is_active!: boolean;
 
+  @Column({ type: 'int', default: 12, comment: 'Warranty Time for product' })
+  warranty_months!: number;
+
   @CreateDateColumn()
   created_at!: Date;
 
